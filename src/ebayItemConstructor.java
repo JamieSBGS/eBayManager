@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import  java.util.ArrayList;
 public class ebayItemConstructor {
     private String itemName;
     private int price;
@@ -30,5 +31,8 @@ public class ebayItemConstructor {
                 System.out.println("Item type must be capitalised and must either be 'Buy it now' or 'Auction'");
             }
         }
+    }
+  public static void productList(){
+        ArrayList<item> Products = new ArrayList<item>();
     }
 }
