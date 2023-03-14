@@ -5,6 +5,7 @@ public class ebayItemConstructor {
     private int price;
     private int stockNum;
     private String itemType;
+  
     public ebayItemConstructor(String itemName, int price, int stockNum, String itemType) {
         this.itemName = itemName;
         this.price = price;

@@ -1,6 +1,8 @@
 import java.io.FileReader;
+import java.io.*;
 import java.util.Scanner;
 import java.io.IOException;
+import java.util.ArrayList;
 public class CSVreader{
   public static String fileNameInput(){
     Scanner CSVNameInput = new Scanner(System.in);  // Create a Scanner object
@@ -13,8 +15,21 @@ public class CSVreader{
   
   public static void readCSV(){
     String CSVname = fileNameInput();
+    String[4] tempArray;
+    int listIndex = 0;
     try{
-      
+       File file = new File(csvFile);
+         FileReader fr = new FileReader(file);
+         BufferedReader br = new BufferedReader(fr);
+         String line = "";
+         while((line = br.readLine()) != null) {
+            tempArray = line.split(delimiter);
+            for(String tempStr : tempArr) {
+               System.out.print(tempStr + " ");
+            }
+            System.out.println();
+         }
+         br.close();
     }catch(IOException c){
       c.printStackTrace();
     }
