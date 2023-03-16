@@ -14,17 +14,16 @@ public class CSVreader{
   public static final String delimiter = ",";
   
   public static void readCSV(){
-    String CSVname = fileNameInput();
-    String[4] tempArray;
-    int listIndex = 0;
     try{
-       File file = new File(csvFile);
-         FileReader fr = new FileReader(file);
+         String CSVname = fileNameInput();
+         String[] tempArray = new String[4];
+         int listIndex = 0;
+         FileReader fr = new FileReader(CSVname);
          BufferedReader br = new BufferedReader(fr);
          String line = "";
          while((line = br.readLine()) != null) {
             tempArray = line.split(delimiter);
-            for(String tempStr : tempArr) {
+            for(String tempStr : tempArray) {
                System.out.print(tempStr + " ");
             }
             System.out.println();
