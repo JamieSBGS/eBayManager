@@ -18,4 +18,22 @@ public class item {
       String name = fields[1];
       int id = Integer.parseInt(fields[0]);
     }
+  
+  @Override
+  public String toString(){
+    return itemName + " , "+ price + " , "+ stockNum + " , "+ itemType;
+  }
+  
+  public String getItemName(){
+    return itemName;
+  }
+  public float getPrice(){
+    return price;
+  }
+  public int getStockNum(){
+    return stockNum;
+  }
+  public String getItemType(){
+    return itemType;
+  }
 }
