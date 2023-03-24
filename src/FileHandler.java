@@ -3,26 +3,27 @@ import java.io.BufferedReader;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.IOException;
+import java.io.File;
 
 public class FileHandler {
 
   public static ArrayList<item> Products = new ArrayList<item>();
 
-public static void readCSV() {
-    try {
-        String fileName = "ProductList.csv";
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] values = line.split(",");
-            item csvProduct = new item(values[0],Integer.parseInt(values[1]), Integer.parseInt(values[2]), values[3]);
-            Products.add(csvProduct);
+    public static void readCSV() {
+        try {
+            File csvObj = new File("C:\\Users\\Jamie\\IdeaProjects\\eBay Manager\\src\\ProductList.csv");
+            BufferedReader br = new BufferedReader(new FileReader(csvObj));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                item csvProduct = new item(values[0], Float.parseFloat(values[1]), Integer.parseInt(values[2]), values[3]);
+                Products.add(csvProduct);
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        br.close();
-    } catch (IOException e) {
-        e.printStackTrace();
     }
-}
 
 
   public static ArrayList<item> getList() {
