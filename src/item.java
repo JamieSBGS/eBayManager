@@ -5,18 +5,14 @@ public class item {
     private float price;
     private int stockNum;
     private String itemType;
+    private int itemID;
   
-    public item(String itemName, float price, int stockNum, String itemType) {
+    public item(String itemName, float price, int stockNum, String itemType, int itemID) {
         this.itemName = itemName;
         this.price = price;
         this.stockNum = stockNum;
-        this.itemType = itemType; 
-    }
-
-    public item(String csv){
-      String[] fields = csv.split(",");
-      String name = fields[1];
-      int id = Integer.parseInt(fields[0]);
+        this.itemType = itemType;
+        this.itemID = itemID;
     }
   
   @Override
@@ -35,5 +31,8 @@ public class item {
   }
   public String getItemType(){
     return itemType;
+  }
+  public int getItemID(){
+    return itemID;
   }
 }

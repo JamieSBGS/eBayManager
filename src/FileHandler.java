@@ -16,7 +16,7 @@ public class FileHandler {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                item csvProduct = new item(values[0], Float.parseFloat(values[1]), Integer.parseInt(values[2]), values[3]);
+                item csvProduct = new item(values[0], Float.parseFloat(values[1]), Integer.parseInt(values[2]), values[3], Integer.parseInt(values[4]));
                 Products.add(csvProduct);
             }
             br.close();
@@ -45,10 +45,16 @@ public class FileHandler {
     System.out.println("Insert how much of the item is in stock");
     int fieldStockNum = Integer.parseInt(UserInput.nextLine());
 
-    System.out.println("Insert ItemType");
+    System.out.println("Insert the item's category");
     String fieldItemType = UserInput.nextLine();
-    item addedProduct = new item(fieldItemName, fieldPrice, fieldStockNum, fieldItemType);
+
+    System.out.println("Insert the item's ID");
+    int fieldItemID = Integer.parseInt(UserInput.nextLine());
+
+    
+    item addedProduct = new item(fieldItemName, fieldPrice, fieldStockNum, fieldItemType, fieldItemID);
     Products.add(addedProduct);
+    // write the object into the CSV file here
   }
 
   public static void displayProducts() {
