@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.Scanner;
 
 public class ConsoleMenu {
@@ -16,6 +17,7 @@ public class ConsoleMenu {
   }
 
   public static void startMenu() {
+    FileHandler.readCSV();
     System.out.println("Welcome to the Console Version of Ebay Manager.");
     applicationMode();
   }
