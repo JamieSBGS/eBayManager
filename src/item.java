@@ -1,5 +1,3 @@
-import java.util.Scanner;
-import  java.util.ArrayList;
 public class item {
     private String itemName;
     private float price;
@@ -17,7 +15,7 @@ public class item {
   
   @Override
   public String toString(){
-    return itemName + " , "+ price + " , "+ stockNum + " , "+ itemType;
+    return itemName + " , "+ price + " , "+ stockNum + " , "+ itemType+" , "+ itemID;
   }
   
   public String getItemName(){
