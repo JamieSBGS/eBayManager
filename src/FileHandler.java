@@ -60,7 +60,7 @@ public class FileHandler {
   public static void displayProducts() {
     System.out.println("");
     System.out.println("The currently stored products:");
-    System.out.println("Item Name, Price, Stock Number, Item Type ");
+    System.out.println("Item Name, Price, Stock Number, Item Type, Item ID ");
     for (int i = 0; i < Products.size(); i++) {
       item itemIndex = Products.get(i);
       String itemToPrint = itemIndex.toString();
