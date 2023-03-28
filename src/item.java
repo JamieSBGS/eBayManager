@@ -3,9 +3,9 @@ public class item {
     private float price;
     private int stockNum;
     private String itemType;
-    private double itemID;
+    private String itemID;
   
-    public item(String itemName, float price, int stockNum, String itemType, double itemID) {
+    public item(String itemName, float price, int stockNum, String itemType, String itemID) {
         this.itemName = itemName;
         this.price = price;
         this.stockNum = stockNum;
@@ -30,7 +30,7 @@ public class item {
   public String getItemType(){
     return itemType;
   }
-  public double getItemID(){
+  public String getItemID(){
     return itemID;
   }
 }
