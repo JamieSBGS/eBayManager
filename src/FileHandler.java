@@ -4,6 +4,8 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.io.File;
+import java.io.FileWriter;
+
 
 public class FileHandler {
 
@@ -16,7 +18,7 @@ public class FileHandler {
           String line;
           while ((line = br.readLine()) != null) {
               String[] values = line.split(",");
-              item csvProduct = new item(values[0], Float.parseFloat(values[1]), Integer.parseInt(values[2]), values[3], Double.parseDouble(values[4]));
+              item csvProduct = new item(values[0], Float.parseFloat(values[1]), Integer.parseInt(values[2]), values[3], values[4]);
               Products.add(csvProduct);
           }
           br.close();
@@ -49,18 +51,35 @@ public class FileHandler {
     String fieldItemType = UserInput.nextLine();
 
     System.out.println("Insert the item's ID");
-    int fieldItemID = Integer.parseInt(UserInput.nextLine());
+    String fieldItemID = UserInput.nextLine();
 
-    
     item addedProduct = new item(fieldItemName, fieldPrice, fieldStockNum, fieldItemType, fieldItemID);
     Products.add(addedProduct);
-    // write the object into the CSV file here
+
+    // Writing to CSV file part
+    String[] params = {addedProduct.getItemName(), String.valueOf(addedProduct.getPrice()), String.valueOf(addedProduct.getStockNum()) , addedProduct.getItemType(), addedProduct.getItemID()};
+
+    try {
+        FileWriter writer = new FileWriter("C:\\Users\\Jamie\\IdeaProjects\\eBay Manager\\src\\ProductList.csv", true);
+        writer.append("\n");
+        for (int i = 0; i < params.length; i++) {
+            writer.append(params[i]);
+
+            if (i != params.length - 1) {
+                writer.append(",");
+            }
+        }
+        writer.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
   }
+
 
   public static void displayProducts() {
     System.out.println("");
     System.out.println("The currently stored products:");
-    System.out.println("Item Name, Price, Stock Number, Item Type ");
+    System.out.println("Item Name, Price, Stock Number, Item Type, Item ID ");
     for (int i = 0; i < Products.size(); i++) {
       item itemIndex = Products.get(i);
       String itemToPrint = itemIndex.toString();

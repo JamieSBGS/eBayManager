@@ -56,21 +56,19 @@ public class ConsoleMenu {
       int mainInput = Integer.parseInt(MainMenuInput.nextLine());
       if (mainInput == 0) {
         FileHandler.clearProductList();
-        endProgram();
       } else if (mainInput == 1) {
         FileHandler.displayProducts();
-        endProgram();
       } else if (mainInput == 2) {
         FileHandler.addItem();
-        endProgram();
       } else if (mainInput == 3) { // Need to create CSV method still!
         System.out.println("Be careful! Make sure the CSV conforms to the layout of the table.");
         FileHandler.readCSV();
-        endProgram();
       } else if (mainInput == 10) {
         System.out.println("Going Back.");
         applicationMode();
-        endProgram();
+      }else if (mainInput == 10) {
+        System.out.println("Going Back.");
+        applicationMode();
       } else {
         System.out.println("Invalid input.");
       }
@@ -81,7 +79,7 @@ public class ConsoleMenu {
     while (end == false) {
       Scanner websiteSelector = new Scanner(System.in);
       System.out.println("Welcome to the Message generator area of the application.");
-      System.out.println("Please select the desired website you want to gnerate the message for.");
+      System.out.println("Please select the desired website you want to generate the message for.");
       System.out.println("1. Ebay");
       System.out.println("2. AliExpress");
       System.out.println("3. Go back to mode selector");
