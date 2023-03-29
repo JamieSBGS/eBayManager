@@ -5,13 +5,11 @@ public class ebayMessageGenerator{
   
   public static void genMenu(){
     Scanner genMenuInput = new Scanner(System.in);
-
     System.out.println("Welcome to the Ebay message generator.");
     System.out.println("Input the number corresponding to the option:");
-    System.out.println("1. Seller Feedback");
-    System.out.println("2. Buyer feedback");
+    System.out.println("1.  For Seller Feedback");
+    System.out.println("2. For Buyer feedback");
     System.out.println("3. Thanks for buying message");
-
    int genUserMenuInput = Integer.parseInt(genMenuInput.nextLine());
     if(genUserMenuInput == 1){
       System.out.println("Seller Feedback Selected");
@@ -24,14 +22,24 @@ public class ebayMessageGenerator{
     }
   }
 
-  public static void sellerFeedbackGen(){
-    Scanner positiveOrNegativeScanner = new Scanner(System.in);
-    ArrayList<String> sellerFeedbackMessage = new ArrayList<String>();
+  public static void buyerFeedbackGen(){
+    Scanner buyerPositiveOrNegativeScanner = new Scanner(System.in);
     System.out.println("Is the feedback Positive or Negative?");
-    String feedbackType = positiveOrNegativeScanner.nextLine();
-    if(feedbackType.equals("Positive") || feedbackType.equals("positive")){
+    String buyerFeedbackType = buyerPositiveOrNegativeScanner.nextLine();
+    if(buyerFeedbackType.equals("Positive") || buyerFeedbackType.equals("positive")){
+      buyerPosMenu();
+    } else if(buyerFeedbackType.equals("Negative") || buyerFeedbackType.equals("negative")){
+      buyerNegMenu();
+    }
+  }
+
+  public static void sellerFeedbackGen(){
+    Scanner sellerPositiveOrNegativeScanner = new Scanner(System.in);
+    System.out.println("Is the feedback Positive or Negative?");
+    String sellerFeedbackType = sellerPositiveOrNegativeScanner.nextLine();
+    if(sellerFeedbackType.equals("Positive") || sellerFeedbackType.equals("positive")){
       sellerPosMenu();
-    } else if(feedbackType.equals("Negative") || feedbackType.equals("negative")){
+    } else if(sellerFeedbackType.equals("Negative") || sellerFeedbackType.equals("negative")){
       sellerNegMenu();
     }
     
@@ -40,13 +48,11 @@ public class ebayMessageGenerator{
   public static void sellerPosMenu() {
     ArrayList<String> sellerPosMessage = new ArrayList<String>();
     Scanner sellerPosMenuScanner = new Scanner(System.in);
-
     System.out.println("Input the number corresponding to the option below:");
     System.out.println("1. Great seller");
     System.out.println("2.A++ Seller");
     System.out.println("3. Add Quick Delivery to the message");
     System.out.println("4. Product corresponds to description");
-
     int sellerPosMenuInput = Integer.parseInt(sellerPosMenuScanner.nextLine());
     if (sellerPosMenuInput == 1) {
       sellerPosMessage.add("Great seller");
@@ -57,6 +63,7 @@ public class ebayMessageGenerator{
     } else if (sellerPosMenuInput == 4) {
       sellerPosMessage.add("Product corresponds to description");
     }
+    // print out the items held in the arrayList
   }
 
     public static void sellerNegMenu(){
@@ -77,5 +84,6 @@ public class ebayMessageGenerator{
       } else if (sellerNegMenuInput == 4) {
         sellerNegMessage.add("Product doesn't match item description");
       }
+      // print out the items held in the arrayList
     }
   }

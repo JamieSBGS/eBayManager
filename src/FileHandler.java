@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.time;
 
 
 public class FileHandler {
@@ -57,7 +58,7 @@ public class FileHandler {
     Products.add(addedProduct);
 
     // Writing to CSV file part
-    String[] params = {addedProduct.getItemName(), String.valueOf(addedProduct.getPrice()), String.valueOf(addedProduct.getStockNum()) , addedProduct.getItemType(), addedProduct.getItemID()};
+    String[] params = {addedProduct.getItemName(), String.valueOf(addedProduct.getPrice()),           String.valueOf(addedProduct.getStockNum()) , addedProduct.getItemType(), addedProduct.getItemID()};
 
     try {
         FileWriter writer = new FileWriter("C:\\Users\\Jamie\\IdeaProjects\\eBay Manager\\src\\ProductList.csv", true);
