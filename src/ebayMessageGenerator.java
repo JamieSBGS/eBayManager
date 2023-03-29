@@ -2,7 +2,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ebayMessageGenerator{
-
+  static ArrayList<String> sellerPosMessage = new ArrayList<String>();
+  static ArrayList<String> buyerPosMessage = new ArrayList<String>();
+  static ArrayList<String> sellerNegMessage = new ArrayList<String>();
+  static ArrayList<String> buyerNegMessage = new ArrayList<String>();
   public static void genMenu(){
     Scanner genMenuInput = new Scanner(System.in);
     System.out.println("Welcome to the Ebay message generator.");
@@ -20,6 +23,17 @@ public class ebayMessageGenerator{
     }else if(genUserMenuInput == 3){
       System.out.println("Thanks for buying message Selected");
     }
+  }
+  public static void printArrayList(ArrayList<String> arrList) {
+    for (int i = 0; i < arrList.size(); i++) {
+      System.out.print(arrList.get(i));
+      if (i != arrList.size() - 1) { // Only add comma and space if not the last element
+        System.out.print(", ");
+      } else { // Add a full stop at the end of the ArrayList
+        System.out.print(".");
+      }
+    }
+    System.out.println(); // Print a newline character after the ArrayList is printed
   }
 
   public static void buyerFeedbackGen(){
@@ -46,30 +60,37 @@ public class ebayMessageGenerator{
   }
 
   public static void sellerPosMenu() {
-    ArrayList<String> sellerPosMessage = new ArrayList<String>();
     Scanner sellerPosMenuScanner = new Scanner(System.in);
     System.out.println("Input the number corresponding to the option below:");
+    System.out.println("0. Finish and print message");
     System.out.println("1. Great seller");
     System.out.println("2.A++ Seller");
     System.out.println("3. Add Quick Delivery to the message");
     System.out.println("4. Product corresponds to description");
     int sellerPosMenuInput = Integer.parseInt(sellerPosMenuScanner.nextLine());
-    if (sellerPosMenuInput == 1) {
+    if(sellerPosMenuInput ==0){
+      printArrayList(sellerPosMessage);
+      sellerPosMessage.clear();
+      System.out.println();
+    }else if (sellerPosMenuInput == 1) {
       sellerPosMessage.add("Great seller");
+      sellerPosMenu();
     } else if (sellerPosMenuInput == 2) {
       sellerPosMessage.add("A++ Seller");
+      sellerPosMenu();
     } else if (sellerPosMenuInput == 3) {
-      sellerPosMessage.add("Add Quick Delivery to the message");
+      sellerPosMessage.add("Quick Delivery");
+      sellerPosMenu();
     } else if (sellerPosMenuInput == 4) {
       sellerPosMessage.add("Product corresponds to description");
+      sellerPosMenu();
     }
-    // print out the items held in the arrayList
   }
 
   public static void buyerPosMenu() {
-    ArrayList<String> buyerPosMessage = new ArrayList<String>();
     Scanner buyerPosMenuScanner = new Scanner(System.in);
     System.out.println("Input the number corresponding to the option below:");
+    System.out.println("0. Finish and print message");
     System.out.println("1. Great buyer");
     System.out.println("2. Trustworthy buyer");
     System.out.println("3. Prompt payment");
@@ -77,60 +98,83 @@ public class ebayMessageGenerator{
     System.out.println("5. very pleased");
     System.out.println("6. fast payment");
     int buyerPosMenuInput = Integer.parseInt(buyerPosMenuScanner.nextLine());
-    if (buyerPosMenuInput == 1) {
+    if(buyerPosMenuInput == 0){
+      printArrayList(buyerPosMessage);
+      buyerPosMessage.clear();
+      System.out.println();
+    }else if (buyerPosMenuInput == 1) {
       buyerPosMessage.add("Great buyer");
+      buyerPosMenu();
     } else if (buyerPosMenuInput == 2) {
       buyerPosMessage.add("Trustworthy buyer");
+      buyerPosMenu();
     } else if (buyerPosMenuInput == 3) {
       buyerPosMessage.add("Prompt payment");
+      buyerPosMenu();
     } else if (buyerPosMenuInput == 4) {
       buyerPosMessage.add("Excellent communication ");
+      buyerPosMenu();
     }else if (buyerPosMenuInput == 5) {
       buyerPosMessage.add("very pleased");
+      buyerPosMenu();
     }else if (buyerPosMenuInput == 6) {
       buyerPosMessage.add("fast payment");
+      buyerPosMenu();
     }
-    // print out the items held in the arrayList
   }
 
-    public static void sellerNegMenu(){
-      ArrayList<String> sellerNegMessage = new ArrayList<String>();
+    public static void sellerNegMenu() {
       Scanner sellerNegMenuScanner = new Scanner(System.in);
       System.out.println("Input the number corresponding to the option below:");
+      System.out.println("0. Finish and print message");
       System.out.println("1. Wouldn't Recommend seller");
       System.out.println("2. Avoid Seller");
       System.out.println("3. Slow Delivery");
       System.out.println("4. Product doesn't match item description");
       int sellerNegMenuInput = Integer.parseInt(sellerNegMenuScanner.nextLine());
-      if (sellerNegMenuInput == 1) {
+      if(sellerNegMenuInput == 0){
+        printArrayList(sellerNegMessage);
+        sellerNegMessage.clear();
+        System.out.println();
+      }else if (sellerNegMenuInput == 1) {
         sellerNegMessage.add("Wouldn't Recommend seller");
+        sellerNegMenu();
       } else if (sellerNegMenuInput == 2) {
         sellerNegMessage.add("Avoid Seller");
+        sellerNegMenu();
       } else if (sellerNegMenuInput == 3) {
         sellerNegMessage.add("Slow Delivery");
+        sellerNegMenu();
       } else if (sellerNegMenuInput == 4) {
         sellerNegMessage.add("Product doesn't match item description");
+        sellerNegMenu();
       }
-      // print out the items held in the arrayList
     }
-  public static void buyerNegMenu(){
-    ArrayList<String> buyerNegMessage = new ArrayList<String>();
+  public static void buyerNegMenu() {
     Scanner buyerNegMenuScanner = new Scanner(System.in);
     System.out.println("Input the number corresponding to the option below:");
+    System.out.println("0. Finish and print message");
     System.out.println("1. Delayed shipping");
     System.out.println("2. Seller hard to work with");
     System.out.println("3. Item never arrived");
     System.out.println("4. Insufficient packaging. Item arrived damaged");
     int buyerNegMenuInput = Integer.parseInt(buyerNegMenuScanner.nextLine());
-    if (buyerNegMenuInput == 1) {
+    if(buyerNegMenuInput ==0){
+      printArrayList(buyerNegMessage);
+      buyerNegMessage.clear();
+      System.out.println();
+    }else if (buyerNegMenuInput == 1) {
       buyerNegMessage.add("Delayed shipping");
+      buyerNegMenu();
     } else if (buyerNegMenuInput == 2) {
       buyerNegMessage.add("Seller hard to work with");
+      buyerNegMenu();
     } else if (buyerNegMenuInput == 3) {
       buyerNegMessage.add("Item never arrived");
+      buyerNegMenu();
     } else if (buyerNegMenuInput == 4) {
       buyerNegMessage.add("Insufficient packaging. Item arrived damaged");
+      buyerNegMenu();
     }
-    // print out the items held in the arrayList
   }
   }

@@ -18,6 +18,7 @@ public class ConsoleMenu {
 
   public static void startMenu() {
     FileHandler.readCSV();
+    FileHandler.Notification.stockAlert();
     System.out.println("Welcome to the Console Version of Ebay Manager.");
     applicationMode();
   }
@@ -86,10 +87,8 @@ public class ConsoleMenu {
       int webInput = Integer.parseInt(websiteSelector.nextLine());
       if (webInput == 1) {
         ebayMessageGenerator.genMenu();
-        endProgram();
       } else if (webInput == 2) {
         System.out.println("Implement AliExpress message gen");
-        endProgram();
       } else if (webInput == 3) {
         applicationMode();
       }

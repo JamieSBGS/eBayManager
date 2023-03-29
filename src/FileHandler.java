@@ -53,15 +53,15 @@ public class FileHandler {
     Products.add(addedProduct);
 
     // Writing to CSV file part
-    String[] params = {addedProduct.getItemName(), String.valueOf(addedProduct.getPrice()),           String.valueOf(addedProduct.getStockNum()) , addedProduct.getItemType(), addedProduct.getItemID()};
+    String[] addedProdFields = {addedProduct.getItemName(), String.valueOf(addedProduct.getPrice()),           String.valueOf(addedProduct.getStockNum()) , addedProduct.getItemType(), addedProduct.getItemID()};
 
     try {
         FileWriter writer = new FileWriter("C:\\Users\\Jamie\\IdeaProjects\\eBay Manager\\src\\ProductList.csv", true);
         writer.append("\n");
-        for (int i = 0; i < params.length; i++) {
-            writer.append(params[i]);
+        for (int i = 0; i < addedProdFields.length; i++) {
+            writer.append(addedProdFields[i]);
 
-            if (i != params.length - 1) {
+            if (i != addedProdFields.length - 1) {
                 writer.append(",");
             }
         }
@@ -82,4 +82,15 @@ public class FileHandler {
       System.out.println(itemToPrint);
     }
   }
+    public class Notification {
+        public static void stockAlert() {
+            for (item item : Products) {
+                if (item.getStockNum() == 1) {
+                    System.out.println("Alert: Only 1 " + item.getItemName() + " left.");
+                } else if (item.getStockNum() == 0) {
+                    System.out.println("Alert: " + item.getItemName() + " is out of stock.");
+                }
+            }
+        }
+    }
 }
