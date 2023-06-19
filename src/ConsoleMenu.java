@@ -17,6 +17,10 @@ public class ConsoleMenu {
   }
 
   public static void startMenu() {
+    String pathCheck = FileHandler.getPath();
+    if(pathCheck == null){
+      FileHandler.setPath();
+    }
     FileHandler.readCSV();
     FileHandler.Notification.stockAlert();
     System.out.println("Welcome to the Console Version of Ebay Manager.");
@@ -67,7 +71,7 @@ public class ConsoleMenu {
       } else if (mainInput == 10) {
         System.out.println("Going Back.");
         applicationMode();
-      }else if (mainInput == 10) {
+      } else if (mainInput == 10) {
         System.out.println("Going Back.");
         applicationMode();
       } else {

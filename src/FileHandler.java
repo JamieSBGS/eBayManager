@@ -2,27 +2,42 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
 public class FileHandler {
-
   public static ArrayList<item> Products = new ArrayList<item>();
 
-  public static void readCSV() {
-      try {
-          File csvObj = new File("C:\\Users\\Jamie\\IdeaProjects\\eBay Manager\\src\\ProductList.csv");
-          BufferedReader br = new BufferedReader(new FileReader(csvObj));
-          String line;
-          while ((line = br.readLine()) != null) {
-              String[] values = line.split(",");
-              item csvProduct = new item(values[0], Float.parseFloat(values[1]), Integer.parseInt(values[2]), values[3], values[4]);
-              Products.add(csvProduct);
-          }
-          br.close();
-      } catch (IOException e) {
-          e.printStackTrace();
-      }
+  public static String setPath() {
+    Scanner userPathInput = new Scanner(System.in);
+    System.out.println("Insert path name of the .csv file which contains the product list");
+    String inputtedPath = userPathInput.nextLine();
+    if (inputtedPath != null) {
+      String Path = inputtedPath;
+      return Path;
+    } else {
+      System.out.println("No data inputted for Path, please try again");
+      setPath();
+    }
   }
 
+  public static String getPath(){
+    return Path;
+  }
+
+  public static void readCSV() {
+    try {
+      File csvObj = new File(Path);
+      BufferedReader br = new BufferedReader(new FileReader(csvObj));
+      String line;
+      while ((line = br.readLine()) != null) {
+        String[] values = line.split(",");
+        item csvProduct = new item(values[0], Float.parseFloat(values[1]), Integer.parseInt(values[2]), values[3],
+            values[4]);
+        Products.add(csvProduct);
+      }
+      br.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   public static ArrayList<item> getList() {
     return Products;
@@ -53,24 +68,24 @@ public class FileHandler {
     Products.add(addedProduct);
 
     // Writing to CSV file part
-    String[] addedProdFields = {addedProduct.getItemName(), String.valueOf(addedProduct.getPrice()),           String.valueOf(addedProduct.getStockNum()) , addedProduct.getItemType(), addedProduct.getItemID()};
+    String[] addedProdFields = { addedProduct.getItemName(), String.valueOf(addedProduct.getPrice()),
+        String.valueOf(addedProduct.getStockNum()), addedProduct.getItemType(), addedProduct.getItemID() };
 
     try {
-        FileWriter writer = new FileWriter("C:\\Users\\Jamie\\IdeaProjects\\eBay Manager\\src\\ProductList.csv", true);
-        writer.append("\n");
-        for (int i = 0; i < addedProdFields.length; i++) {
-            writer.append(addedProdFields[i]);
+      FileWriter writer = new FileWriter("C:\\Users\\Jamie\\IdeaProjects\\eBay Manager\\src\\ProductList.csv", true);
+      writer.append("\n");
+      for (int i = 0; i < addedProdFields.length; i++) {
+        writer.append(addedProdFields[i]);
 
-            if (i != addedProdFields.length - 1) {
-                writer.append(",");
-            }
+        if (i != addedProdFields.length - 1) {
+          writer.append(",");
         }
-        writer.close();
+      }
+      writer.close();
     } catch (IOException e) {
-        e.printStackTrace();
+      e.printStackTrace();
     }
   }
-
 
   public static void displayProducts() {
     System.out.println("");
@@ -82,15 +97,16 @@ public class FileHandler {
       System.out.println(itemToPrint);
     }
   }
-    public class Notification {
-        public static void stockAlert() {
-            for (item item : Products) {
-                if (item.getStockNum() == 1) {
-                    System.out.println("Alert: Only 1 " + item.getItemName() + " left.");
-                } else if (item.getStockNum() == 0) {
-                    System.out.println("Alert: " + item.getItemName() + " is out of stock.");
-                }
-            }
+
+  public class Notification {
+    public void stockAlert() {
+      for (item item : Products) {
+        if (item.getStockNum() == 1) {
+          System.out.println("Alert: Only 1 " + item.getItemName() + " left.");
+        } else if (item.getStockNum() == 0) {
+          System.out.println("Alert: " + item.getItemName() + " is out of stock.");
         }
+      }
     }
+  }
 }
