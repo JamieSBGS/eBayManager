@@ -6,13 +6,22 @@ public class FileHandler {
     public static ArrayList<item> Products = new ArrayList<item>();
     private  static String Path;
 
-    public static String checkSavedPath(){
-        return Path;
+    public static void checkSavedPath(){
+        try{
+            FileReader fr = new FileReader("config.txt");
+            BufferedReader br = new BufferedReader(fr);
+            Path = br.readLine();
+            readCSV();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+            setPath();
+        }
     }
 
     public static void savePath(){
         String fileName = "config.txt";
-        boolean append = true;
+        boolean append = false;
         try (PrintWriter pr = new PrintWriter(new FileWriter("config.txt", append))) {
             pr.println(Path);
         }
@@ -28,6 +37,7 @@ public class FileHandler {
 
         if (inputtedPath != null && inputtedPath.endsWith(".csv")) {
             Path = inputtedPath;
+            savePath();
             return Path;
         } else {
             System.out.println("Invalid path inputted or the file doesn't have a .csv extension. Please try again.");

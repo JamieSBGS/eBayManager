@@ -17,10 +17,7 @@ public class ConsoleMenu {
   }
 
   public static void startMenu() {
-    String pathCheck = FileHandler.getPath();
-    if(pathCheck == null){
-      FileHandler.setPath();
-    }
+    FileHandler.checkSavedPath();
     FileHandler.readCSV();
     FileHandler.Notification.stockAlert();
     System.out.println("Welcome to the Console Version of Ebay Manager.");
