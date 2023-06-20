@@ -6,16 +6,17 @@ public class FileHandler {
     public static ArrayList<item> Products = new ArrayList<item>();
     private  static String Path;
 
-    public static void checkSavedPath(){
-        try{
+    public static void checkSavedPath() {
+        try {
             FileReader fr = new FileReader("config.txt");
             BufferedReader br = new BufferedReader(fr);
             Path = br.readLine();
             readCSV();
-        }
-        catch(IOException e){
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("Saved path not found. Please enter a new path.");
             setPath();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
