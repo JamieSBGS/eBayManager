@@ -6,6 +6,21 @@ public class FileHandler {
     public static ArrayList<item> Products = new ArrayList<item>();
     private  static String Path;
 
+    public static String checkSavedPath(){
+        return Path;
+    }
+
+    public static void savePath(){
+        String fileName = "config.txt";
+        boolean append = true;
+        try (PrintWriter pr = new PrintWriter(new FileWriter("config.txt", append))) {
+            pr.println(Path);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
      public static String setPath() {
         Scanner userPathInput = new Scanner(System.in);
         System.out.println("Insert path name of the .csv file which contains the product list");
@@ -27,7 +42,7 @@ public class FileHandler {
 
     public static void readCSV() {
         try {
-            File csvObj = new File(Path);
+            File csvObj = new File(getPath());
             BufferedReader br = new BufferedReader(new FileReader(csvObj));
             String line;
             while ((line = br.readLine()) != null) {
