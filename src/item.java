@@ -1,9 +1,12 @@
+import java.math.*;
+
 public class item {
   private String itemName;
   private float price;
   private int stockNum;
   private String itemType;
   private String itemID;
+  private float netProfit;
 
   public item(String itemName, float price, int stockNum, String itemType, String itemID) {
     this.itemName = itemName;
@@ -11,6 +14,7 @@ public class item {
     this.stockNum = stockNum;
     this.itemType = itemType;
     this.itemID = itemID;
+    this.netProfit = setNetProfit();
   }
 
   @Override
@@ -36,5 +40,15 @@ public class item {
 
   public String getItemID() {
     return itemID;
+  }
+
+  public float setNetProfit() {
+    float tax = (float) 0.80;
+    float tempPrice = (float) (getPrice() * tax);
+    return tempPrice;
+  }
+
+  public float getNetProfit() {
+    return netProfit;
   }
 }
