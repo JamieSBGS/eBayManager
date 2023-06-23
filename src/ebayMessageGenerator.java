@@ -49,7 +49,7 @@ public class ebayMessageGenerator {
       buyerPosMenu();
     } else if (buyerFeedbackType.equals("Negative") || buyerFeedbackType.equals("negative")) {
       buyerNegMenu();
-    } else{
+    } else {
       buyerFeedbackGen();
     }
   }
@@ -62,7 +62,7 @@ public class ebayMessageGenerator {
       sellerPosMenu();
     } else if (sellerFeedbackType.equals("Negative") || sellerFeedbackType.equals("negative")) {
       sellerNegMenu();
-    }else{
+    } else {
       sellerFeedbackGen();
     }
 

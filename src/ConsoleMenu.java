@@ -4,6 +4,14 @@ import java.util.Scanner;
 public class ConsoleMenu {
   private static Boolean end = false;
 
+  public static void startMenu() {
+    FileHandler.checkSavedPath();
+    FileHandler.readCSV();
+    FileHandler.Notification.stockAlert();
+    System.out.println("Welcome to the Console Version of Ebay Manager.");
+    applicationMode();
+  }
+
   private static void endProgram() {
     Scanner endCheck = new Scanner(System.in);
     System.out.println("");
@@ -16,13 +24,6 @@ public class ConsoleMenu {
     }
   }
 
-  public static void startMenu() {
-    FileHandler.checkSavedPath();
-    FileHandler.readCSV();
-    FileHandler.Notification.stockAlert();
-    System.out.println("Welcome to the Console Version of Ebay Manager.");
-    applicationMode();
-  }
 
   public static void applicationMode() {
     Scanner applicationModeSelector = new Scanner(System.in);

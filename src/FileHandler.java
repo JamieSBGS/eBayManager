@@ -16,6 +16,7 @@ public class FileHandler {
       System.out.println("Saved path not found. Please enter a new path.");
       setPath();
     } catch (IOException e) {
+      System.out.println("Invalid input");
       e.printStackTrace();
     }
   }
