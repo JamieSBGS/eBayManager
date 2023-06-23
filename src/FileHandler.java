@@ -80,28 +80,21 @@ public class FileHandler {
     Scanner UserInput = new Scanner(System.in);
     System.out.println("Insert Item name");
     String fieldItemName = UserInput.nextLine();
-
     System.out.println("Insert Price");
     float fieldPrice = Float.parseFloat(UserInput.nextLine());
-
     System.out.println("Insert how much of the item is in stock");
     int fieldStockNum = Integer.parseInt(UserInput.nextLine());
-
     System.out.println("Insert the item's category");
     String fieldItemType = UserInput.nextLine();
-
     System.out.println("Insert the item's ID");
     String fieldItemID = UserInput.nextLine();
-
     item addedProduct = new item(fieldItemName, fieldPrice, fieldStockNum, fieldItemType, fieldItemID);
     Products.add(addedProduct);
-
     // Writing to CSV file part
     String[] addedProdFields = { addedProduct.getItemName(), String.valueOf(addedProduct.getPrice()),
         String.valueOf(addedProduct.getStockNum()), addedProduct.getItemType(), addedProduct.getItemID() };
-
     try {
-      FileWriter writer = new FileWriter("C:\\Users\\Jamie\\IdeaProjects\\eBay Manager\\src\\ProductList.csv", true);
+      FileWriter writer = new FileWriter(getPath(), true);
       writer.append("\n");
       for (int i = 0; i < addedProdFields.length; i++) {
         writer.append(addedProdFields[i]);
@@ -119,10 +112,12 @@ public class FileHandler {
   public static void displayProducts() {
     System.out.println("");
     System.out.println("The currently stored products:");
-    System.out.println("Item Name, Price, Stock Number, Item Type, Item ID ");
+    System.out.println("Item Name, Price, Stock Number, Item Type, Item ID, Net Profit");
     for (int i = 0; i < Products.size(); i++) {
       item itemIndex = Products.get(i);
       String itemToPrint = itemIndex.toString();
+      double netProfit = itemIndex.getNetProfit();
+      itemToPrint += ", " + netProfit;
       System.out.println(itemToPrint);
     }
   }

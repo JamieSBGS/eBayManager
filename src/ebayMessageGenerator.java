@@ -78,11 +78,17 @@ public class ebayMessageGenerator {
   public static void sellerPosMenu() {
     Scanner sellerPosMenuScanner = new Scanner(System.in);
     System.out.println("Input the number corresponding to the option below:");
-    System.out.println("0. Finish and print message");
+    System.out.println("0. Finish,print and copy message to clipboard");
     System.out.println("1. Great seller");
-    System.out.println("2.A++ Seller");
+    System.out.println("2. A++ Seller");
     System.out.println("3. Add Quick Delivery to the message");
     System.out.println("4. Product corresponds to description");
+    System.out.println("5. Excellent customer service");
+    System.out.println("6. Highly recommended");
+    System.out.println("7. Smooth transaction");
+    System.out.println("8. Reliable seller");
+    System.out.println("9. Fast shipping");
+    System.out.println("10. Impressive packaging");
     int sellerPosMenuInput = Integer.parseInt(sellerPosMenuScanner.nextLine());
     if (sellerPosMenuInput == 0) {
       printArrayList(sellerPosMessage);
@@ -102,8 +108,27 @@ public class ebayMessageGenerator {
     } else if (sellerPosMenuInput == 4) {
       sellerPosMessage.add("Product corresponds to description");
       sellerPosMenu();
+    } else if (sellerPosMenuInput == 5) {
+      sellerPosMessage.add("Excellent customer service");
+      sellerPosMenu();
+    } else if (sellerPosMenuInput == 6) {
+      sellerPosMessage.add("Highly recommended");
+      sellerPosMenu();
+    } else if (sellerPosMenuInput == 7) {
+      sellerPosMessage.add("Smooth transaction");
+      sellerPosMenu();
+    } else if (sellerPosMenuInput == 8) {
+      sellerPosMessage.add("Reliable seller");
+      sellerPosMenu();
+    } else if (sellerPosMenuInput == 9) {
+      sellerPosMessage.add("Fast shipping");
+      sellerPosMenu();
+    } else if (sellerPosMenuInput == 10) {
+      sellerPosMessage.add("Impressive packaging");
+      sellerPosMenu();
     }
   }
+
 
   public static void buyerPosMenu() {
     Scanner buyerPosMenuScanner = new Scanner(System.in);
