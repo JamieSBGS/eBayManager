@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.awt.datatransfer.StringSelection;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 
 public class ebayMessageGenerator {
   static ArrayList<String> sellerPosMessage = new ArrayList<String>();
@@ -46,6 +49,8 @@ public class ebayMessageGenerator {
       buyerPosMenu();
     } else if (buyerFeedbackType.equals("Negative") || buyerFeedbackType.equals("negative")) {
       buyerNegMenu();
+    } else{
+      buyerFeedbackGen();
     }
   }
 
@@ -57,8 +62,17 @@ public class ebayMessageGenerator {
       sellerPosMenu();
     } else if (sellerFeedbackType.equals("Negative") || sellerFeedbackType.equals("negative")) {
       sellerNegMenu();
+    }else{
+      sellerFeedbackGen();
     }
 
+  }
+
+  public static void copyToClipboard(ArrayList<String> arrlistToCopy) {
+    String myString = arrlistToCopy.toString();
+    StringSelection stringSelection = new StringSelection(myString);
+    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    clipboard.setContents(stringSelection, null);
   }
 
   public static void sellerPosMenu() {
@@ -72,6 +86,8 @@ public class ebayMessageGenerator {
     int sellerPosMenuInput = Integer.parseInt(sellerPosMenuScanner.nextLine());
     if (sellerPosMenuInput == 0) {
       printArrayList(sellerPosMessage);
+      copyToClipboard(sellerPosMessage);
+      System.out.println("successfully copied to clipboard");
       sellerPosMessage.clear();
       System.out.println();
     } else if (sellerPosMenuInput == 1) {
@@ -102,6 +118,8 @@ public class ebayMessageGenerator {
     int buyerPosMenuInput = Integer.parseInt(buyerPosMenuScanner.nextLine());
     if (buyerPosMenuInput == 0) {
       printArrayList(buyerPosMessage);
+      copyToClipboard(buyerPosMessage);
+      System.out.println("successfully copied to clipboard");
       buyerPosMessage.clear();
       System.out.println();
     } else if (buyerPosMenuInput == 1) {
@@ -136,6 +154,8 @@ public class ebayMessageGenerator {
     int sellerNegMenuInput = Integer.parseInt(sellerNegMenuScanner.nextLine());
     if (sellerNegMenuInput == 0) {
       printArrayList(sellerNegMessage);
+      copyToClipboard(sellerNegMessage);
+      System.out.println("successfully copied to clipboard");
       sellerNegMessage.clear();
       System.out.println();
     } else if (sellerNegMenuInput == 1) {
@@ -164,6 +184,8 @@ public class ebayMessageGenerator {
     int buyerNegMenuInput = Integer.parseInt(buyerNegMenuScanner.nextLine());
     if (buyerNegMenuInput == 0) {
       printArrayList(buyerNegMessage);
+      copyToClipboard(buyerNegMessage);
+      System.out.println("successfully copied to clipboard");
       buyerNegMessage.clear();
       System.out.println();
     } else if (buyerNegMenuInput == 1) {
