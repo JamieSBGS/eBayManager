@@ -1,4 +1,3 @@
-import java.io.File;
 import java.util.Scanner;
 
 public class ConsoleMenu {
@@ -14,12 +13,12 @@ public class ConsoleMenu {
 
   private static void endProgram() {
     Scanner endCheck = new Scanner(System.in);
-    System.out.println("");
+    System.out.println();
     System.out.println("Would you like to close the Program?");
     String endInput = endCheck.nextLine();
-    if (endInput == "yes") {
+    if (endInput.equals("yes")) {
       end = true;
-    } else if (endInput == "y") {
+    } else if (endInput.equals("y")) {
       end = true;
     }
   }
@@ -27,7 +26,7 @@ public class ConsoleMenu {
 
   public static void applicationMode() {
     Scanner applicationModeSelector = new Scanner(System.in);
-    System.out.println("");
+    System.out.println();
     System.out.println("Input the number corresponding to the part of the application you'd like to run");
     System.out.println("1. Ebay Inventory Manager");
     System.out.println("2. Message Generator");
@@ -42,10 +41,10 @@ public class ConsoleMenu {
   }
 
   public static void managerMainMenu() {
-    while (end == false) {
+    while (!end) {
 
       // Prints whole menu
-      System.out.println("");
+      System.out.println();
       System.out.println("Welcome to the Console Version of Ebay Manager.");
       Scanner MainMenuInput = new Scanner(System.in);
       System.out.println("Please input the number which corresponds to the function you want to use.");
@@ -69,9 +68,6 @@ public class ConsoleMenu {
       } else if (mainInput == 10) {
         System.out.println("Going Back.");
         applicationMode();
-      } else if (mainInput == 10) {
-        System.out.println("Going Back.");
-        applicationMode();
       } else {
         System.out.println("Invalid input.");
       }
@@ -79,7 +75,7 @@ public class ConsoleMenu {
   }
 
   public static void messageGeneratorMenu() {
-    while (end == false) {
+    while (!end) {
       Scanner websiteSelector = new Scanner(System.in);
       System.out.println("Welcome to the Message generator area of the application.");
       System.out.println("Please select the desired website you want to generate the message for.");
@@ -90,7 +86,7 @@ public class ConsoleMenu {
       if (webInput == 1) {
         ebayMessageGenerator.genMenu();
       } else if (webInput == 2) {
-        System.out.println("Implement AliExpress message gen");
+        aliExpressMessageGenerator.genMenu();
       } else if (webInput == 3) {
         applicationMode();
       }

@@ -1,4 +1,4 @@
-import java.math.*;
+
 
 public class item {
   private String itemName;
@@ -14,7 +14,7 @@ public class item {
     this.stockNum = stockNum;
     this.itemType = itemType;
     this.itemID = itemID;
-    this.netProfit = setNetProfit();
+    this.netProfit = calculateNetProfit();
   }
 
   @Override
@@ -42,10 +42,9 @@ public class item {
     return itemID;
   }
 
-  public float setNetProfit() {
+  public float calculateNetProfit() {
     float tax = (float) 0.80;
-    float tempPrice = (float) (getPrice() * tax);
-    return tempPrice;
+    return getPrice() * tax;
   }
 
   public float getNetProfit() {

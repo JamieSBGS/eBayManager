@@ -5,10 +5,10 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 
 public class ebayMessageGenerator {
-  static ArrayList<String> sellerPosMessage = new ArrayList<String>();
-  static ArrayList<String> buyerPosMessage = new ArrayList<String>();
-  static ArrayList<String> sellerNegMessage = new ArrayList<String>();
-  static ArrayList<String> buyerNegMessage = new ArrayList<String>();
+  static ArrayList<String> sellerPosMessage = new ArrayList<>();
+  static ArrayList<String> buyerPosMessage = new ArrayList<>();
+  static ArrayList<String> sellerNegMessage = new ArrayList<>();
+  static ArrayList<String> buyerNegMessage = new ArrayList<>();
 
   public static void genMenu() {
     Scanner genMenuInput = new Scanner(System.in);
@@ -23,7 +23,7 @@ public class ebayMessageGenerator {
       sellerFeedbackGen();
     } else if (genUserMenuInput == 2) {
       System.out.println("Buyer Feedback Selected");
-      sellerFeedbackGen();
+      buyerFeedbackGen();
     } else if (genUserMenuInput == 3) {
       System.out.println("Thanks for buying message Selected");
     }
