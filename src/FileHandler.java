@@ -99,7 +99,8 @@ public class FileHandler {
         String.valueOf(addedProduct.getStockNum()), addedProduct.getItemType(), addedProduct.getItemID() };
 
     try {
-      FileWriter writer = new FileWriter("C:\\Users\\Jamie\\IdeaProjects\\eBay Manager\\src\\ProductList.csv", true);
+      String addPath =getPath();
+      FileWriter writer = new FileWriter(addPath, true);
       writer.append("\n");
       for (int i = 0; i < addedProdFields.length; i++) {
         writer.append(addedProdFields[i]);
@@ -115,7 +116,7 @@ public class FileHandler {
   }
 
   public static void displayProducts() {
-    System.out.println("");
+    System.out.println();
     System.out.println("The currently stored products:");
     System.out.println("Item Name, Price, Stock Number, Item Type, Item ID, Net Profit");
     for (int i = 0; i < Products.size(); i++) {
