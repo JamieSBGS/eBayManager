@@ -1,8 +1,5 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.awt.datatransfer.StringSelection;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
 
 public class aliExpressMessageGenerator {
   static ArrayList<String> aliSellerPosMessage = new ArrayList<>();
@@ -68,13 +65,6 @@ public class aliExpressMessageGenerator {
 
   }
 
-  public static void copyToClipboard(ArrayList<String> arraylistToCopy) {
-    String myString = arraylistToCopy.toString();
-    StringSelection stringSelection = new StringSelection(myString);
-    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-    clipboard.setContents(stringSelection, null);
-  }
-
   public static void sellerPosMenu() {
     Scanner sellerPosMenuScanner = new Scanner(System.in);
     System.out.println("Input the number corresponding to the option below:");
@@ -92,7 +82,7 @@ public class aliExpressMessageGenerator {
     int sellerPosMenuInput = Integer.parseInt(sellerPosMenuScanner.nextLine());
     if (sellerPosMenuInput == 0) {
       printArrayList(aliSellerPosMessage);
-      copyToClipboard(aliSellerPosMessage);
+      FileHandler.copyToClipboard(aliSellerPosMessage);
       System.out.println("successfully copied to clipboard");
       aliSellerPosMessage.clear();
       System.out.println();
@@ -142,7 +132,7 @@ public class aliExpressMessageGenerator {
     int buyerPosMenuInput = Integer.parseInt(buyerPosMenuScanner.nextLine());
     if (buyerPosMenuInput == 0) {
       printArrayList(aliBuyerPosMessage);
-      copyToClipboard(aliBuyerPosMessage);
+      FileHandler.copyToClipboard(aliBuyerPosMessage);
       System.out.println("successfully copied to clipboard");
       aliBuyerPosMessage.clear();
       System.out.println();
@@ -178,7 +168,7 @@ public class aliExpressMessageGenerator {
     int sellerNegMenuInput = Integer.parseInt(sellerNegMenuScanner.nextLine());
     if (sellerNegMenuInput == 0) {
       printArrayList(aliSellerNegMessage);
-      copyToClipboard(aliSellerNegMessage);
+      FileHandler.copyToClipboard(aliSellerNegMessage);
       System.out.println("successfully copied to clipboard");
       aliSellerNegMessage.clear();
       System.out.println();
@@ -208,7 +198,7 @@ public class aliExpressMessageGenerator {
     int buyerNegMenuInput = Integer.parseInt(buyerNegMenuScanner.nextLine());
     if (buyerNegMenuInput == 0) {
       printArrayList(aliBuyerNegMessage);
-      copyToClipboard(aliBuyerNegMessage);
+      FileHandler.copyToClipboard(aliBuyerNegMessage);
       System.out.println("successfully copied to clipboard");
       aliBuyerNegMessage.clear();
       System.out.println();

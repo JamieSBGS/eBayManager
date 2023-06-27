@@ -68,13 +68,6 @@ public class ebayMessageGenerator {
 
   }
 
-  public static void copyToClipboard(ArrayList<String> arrlistToCopy) {
-    String myString = arrlistToCopy.toString();
-    StringSelection stringSelection = new StringSelection(myString);
-    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-    clipboard.setContents(stringSelection, null);
-  }
-
   public static void sellerPosMenu() {
     Scanner sellerPosMenuScanner = new Scanner(System.in);
     System.out.println("Input the number corresponding to the option below:");
@@ -92,7 +85,7 @@ public class ebayMessageGenerator {
     int sellerPosMenuInput = Integer.parseInt(sellerPosMenuScanner.nextLine());
     if (sellerPosMenuInput == 0) {
       printArrayList(sellerPosMessage);
-      copyToClipboard(sellerPosMessage);
+      FileHandler.copyToClipboard(sellerPosMessage);
       System.out.println("successfully copied to clipboard");
       sellerPosMessage.clear();
       System.out.println();
@@ -143,7 +136,7 @@ public class ebayMessageGenerator {
     int buyerPosMenuInput = Integer.parseInt(buyerPosMenuScanner.nextLine());
     if (buyerPosMenuInput == 0) {
       printArrayList(buyerPosMessage);
-      copyToClipboard(buyerPosMessage);
+      FileHandler.copyToClipboard(buyerPosMessage);
       System.out.println("successfully copied to clipboard");
       buyerPosMessage.clear();
       System.out.println();
@@ -179,7 +172,7 @@ public class ebayMessageGenerator {
     int sellerNegMenuInput = Integer.parseInt(sellerNegMenuScanner.nextLine());
     if (sellerNegMenuInput == 0) {
       printArrayList(sellerNegMessage);
-      copyToClipboard(sellerNegMessage);
+      FileHandler.copyToClipboard(sellerNegMessage);
       System.out.println("successfully copied to clipboard");
       sellerNegMessage.clear();
       System.out.println();
@@ -209,7 +202,7 @@ public class ebayMessageGenerator {
     int buyerNegMenuInput = Integer.parseInt(buyerNegMenuScanner.nextLine());
     if (buyerNegMenuInput == 0) {
       printArrayList(buyerNegMessage);
-      copyToClipboard(buyerNegMessage);
+      FileHandler.copyToClipboard(buyerNegMessage);
       System.out.println("successfully copied to clipboard");
       buyerNegMessage.clear();
       System.out.println();

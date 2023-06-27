@@ -1,6 +1,11 @@
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.awt.Toolkit;
+
 
 public class FileHandler {
   public static ArrayList<item> Products = new ArrayList<>();
@@ -66,6 +71,27 @@ public class FileHandler {
     }
   }
 
+  public static void updateProductListFile() {
+    String filePath = getPath();
+    try (FileWriter writer = new FileWriter(filePath)) {
+      // Write the header
+      writer.write("Item Name, Price, Stock Number, Item Type, Item ID, Net Profit\n");
+      // Write each item
+      for (item item : getProducts()) {
+        writer.write(item.getItemName() + ",");
+        writer.write(item.getPrice() + ",");
+        writer.write(item.getStockNum() + ",");
+        writer.write(item.getItemType() + ",");
+        writer.write(item.getItemID() + ",");
+        writer.write(item.getNetProfit() + "\n");
+      }
+      System.out.println("Data has been written to the file successfully.");
+    } catch (IOException e) {
+      System.out.println("An error occurred while writing to the file.");
+      e.printStackTrace();
+    }
+  }
+
   public static ArrayList<item> getProducts() {
     return Products;
   }
@@ -115,6 +141,28 @@ public class FileHandler {
     }
   }
 
+  public static void remove(String itemNameToRemove){
+    item itemToRemove = null;
+    // finish remove stuff
+  }
+
+  public static void removeProductByName(String itemName) {
+    item itemToRemove = null;
+    for (item item : Products) {
+      if (item.getItemName().equals(itemName)) {
+        itemToRemove = item;
+      }
+    }
+
+    if (itemToRemove != null) {
+      Products.remove(itemToRemove);
+      updateProductListFile();
+      System.out.println("Item removed successfully.");
+    } else {
+      System.out.println("Item not found.");
+    }
+  }
+
   public static void displayProducts() {
     System.out.println();
     System.out.println("The currently stored products:");
@@ -126,6 +174,12 @@ public class FileHandler {
       itemToPrint += ", " + netProfit;
       System.out.println(itemToPrint);
     }
+  }
+  public static void copyToClipboard(ArrayList<String> arraylistToCopy) {
+    String myString = arraylistToCopy.toString();
+    StringSelection stringSelection = new StringSelection(myString);
+    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    clipboard.setContents(stringSelection, null);
   }
 
   public static class Notification {
