@@ -1,22 +1,15 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.awt.datatransfer.StringSelection;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
 
-public class ebayMessageGenerator {
-  static ArrayList<String> sellerPosMessage = new ArrayList<>();
-  static ArrayList<String> buyerPosMessage = new ArrayList<>();
-  static ArrayList<String> sellerNegMessage = new ArrayList<>();
-  static ArrayList<String> buyerNegMessage = new ArrayList<>();
-
+public class aliExpressMessage{
+  static ArrayList<String> message = new ArrayList<>();
   public static void genMenu() {
+    message.clear();
     Scanner genMenuInput = new Scanner(System.in);
-    System.out.println("Welcome to the Ebay message generator.");
+    System.out.println("Welcome to the AliExpress message generator.");
     System.out.println("Input the number corresponding to the option:");
     System.out.println("1.  For Seller Feedback");
     System.out.println("2. For Buyer feedback");
-    System.out.println("3. Thanks for buying message");
     int genUserMenuInput = Integer.parseInt(genMenuInput.nextLine());
     if (genUserMenuInput == 1) {
       System.out.println("Seller Feedback Selected");
@@ -24,8 +17,6 @@ public class ebayMessageGenerator {
     } else if (genUserMenuInput == 2) {
       System.out.println("Buyer Feedback Selected");
       buyerFeedbackGen();
-    } else if (genUserMenuInput == 3) {
-      System.out.println("Thanks for buying message Selected");
     }
   }
 
@@ -45,9 +36,9 @@ public class ebayMessageGenerator {
     Scanner buyerPositiveOrNegativeScanner = new Scanner(System.in);
     System.out.println("Is the feedback Positive or Negative?");
     String buyerFeedbackType = buyerPositiveOrNegativeScanner.nextLine();
-    if (buyerFeedbackType.equals("Positive") || buyerFeedbackType.equals("positive")) {
+    if (buyerFeedbackType.equals("Positive") || buyerFeedbackType.equals("positive")|| buyerFeedbackType.equals("p") || buyerFeedbackType.equals("P")) {
       buyerPosMenu();
-    } else if (buyerFeedbackType.equals("Negative") || buyerFeedbackType.equals("negative")) {
+    } else if (buyerFeedbackType.equals("Negative") || buyerFeedbackType.equals("negative") || buyerFeedbackType.equals("n") || buyerFeedbackType.equals("N")) {
       buyerNegMenu();
     } else {
       buyerFeedbackGen();
@@ -58,9 +49,9 @@ public class ebayMessageGenerator {
     Scanner sellerPositiveOrNegativeScanner = new Scanner(System.in);
     System.out.println("Is the feedback Positive or Negative?");
     String sellerFeedbackType = sellerPositiveOrNegativeScanner.nextLine();
-    if (sellerFeedbackType.equals("Positive") || sellerFeedbackType.equals("positive")) {
+    if (sellerFeedbackType.equals("Positive") || sellerFeedbackType.equals("positive") || sellerFeedbackType.equals("P") || sellerFeedbackType.equals("p")) {
       sellerPosMenu();
-    } else if (sellerFeedbackType.equals("Negative") || sellerFeedbackType.equals("negative")) {
+    } else if (sellerFeedbackType.equals("Negative") || sellerFeedbackType.equals("negative")|| sellerFeedbackType.equals("N") || sellerFeedbackType.equals("n")) {
       sellerNegMenu();
     } else {
       sellerFeedbackGen();
@@ -84,44 +75,43 @@ public class ebayMessageGenerator {
     System.out.println("10. Impressive packaging");
     int sellerPosMenuInput = Integer.parseInt(sellerPosMenuScanner.nextLine());
     if (sellerPosMenuInput == 0) {
-      printArrayList(sellerPosMessage);
-      FileHandler.copyToClipboard(sellerPosMessage);
+      printArrayList(message);
+      FileHandler.copyToClipboard(message);
       System.out.println("successfully copied to clipboard");
-      sellerPosMessage.clear();
+      message.clear();
       System.out.println();
     } else if (sellerPosMenuInput == 1) {
-      sellerPosMessage.add("Great seller");
+      message.add("Great seller");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 2) {
-      sellerPosMessage.add("A++ Seller");
+      message.add("A++ Seller");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 3) {
-      sellerPosMessage.add("Quick Delivery");
+      message.add("Quick Delivery");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 4) {
-      sellerPosMessage.add("Product corresponds to description");
+      message.add("Product corresponds to description");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 5) {
-      sellerPosMessage.add("Excellent customer service");
+      message.add("Excellent customer service");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 6) {
-      sellerPosMessage.add("Highly recommended");
+      message.add("Highly recommended");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 7) {
-      sellerPosMessage.add("Smooth transaction");
+      message.add("Smooth transaction");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 8) {
-      sellerPosMessage.add("Reliable seller");
+      message.add("Reliable seller");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 9) {
-      sellerPosMessage.add("Fast shipping");
+      message.add("Fast shipping");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 10) {
-      sellerPosMessage.add("Impressive packaging");
+      message.add("Impressive packaging");
       sellerPosMenu();
     }
   }
-
 
   public static void buyerPosMenu() {
     Scanner buyerPosMenuScanner = new Scanner(System.in);
@@ -135,28 +125,28 @@ public class ebayMessageGenerator {
     System.out.println("6. fast payment");
     int buyerPosMenuInput = Integer.parseInt(buyerPosMenuScanner.nextLine());
     if (buyerPosMenuInput == 0) {
-      printArrayList(buyerPosMessage);
-      FileHandler.copyToClipboard(buyerPosMessage);
+      printArrayList(message);
+      FileHandler.copyToClipboard(message);
       System.out.println("successfully copied to clipboard");
-      buyerPosMessage.clear();
+      message.clear();
       System.out.println();
     } else if (buyerPosMenuInput == 1) {
-      buyerPosMessage.add("Great buyer");
+      message.add("Great buyer");
       buyerPosMenu();
     } else if (buyerPosMenuInput == 2) {
-      buyerPosMessage.add("Trustworthy buyer");
+      message.add("Trustworthy buyer");
       buyerPosMenu();
     } else if (buyerPosMenuInput == 3) {
-      buyerPosMessage.add("Prompt payment");
+      message.add("Prompt payment");
       buyerPosMenu();
     } else if (buyerPosMenuInput == 4) {
-      buyerPosMessage.add("Excellent communication ");
+      message.add("Excellent communication ");
       buyerPosMenu();
     } else if (buyerPosMenuInput == 5) {
-      buyerPosMessage.add("very pleased");
+      message.add("very pleased");
       buyerPosMenu();
     } else if (buyerPosMenuInput == 6) {
-      buyerPosMessage.add("fast payment");
+      message.add("fast payment");
       buyerPosMenu();
     }
   }
@@ -171,22 +161,22 @@ public class ebayMessageGenerator {
     System.out.println("4. Product doesn't match item description");
     int sellerNegMenuInput = Integer.parseInt(sellerNegMenuScanner.nextLine());
     if (sellerNegMenuInput == 0) {
-      printArrayList(sellerNegMessage);
-      FileHandler.copyToClipboard(sellerNegMessage);
+      printArrayList(message);
+      FileHandler.copyToClipboard(message);
       System.out.println("successfully copied to clipboard");
-      sellerNegMessage.clear();
+      message.clear();
       System.out.println();
     } else if (sellerNegMenuInput == 1) {
-      sellerNegMessage.add("Wouldn't Recommend seller");
+      message.add("Wouldn't Recommend seller");
       sellerNegMenu();
     } else if (sellerNegMenuInput == 2) {
-      sellerNegMessage.add("Avoid Seller");
+      message.add("Avoid Seller");
       sellerNegMenu();
     } else if (sellerNegMenuInput == 3) {
-      sellerNegMessage.add("Slow Delivery");
+      message.add("Slow Delivery");
       sellerNegMenu();
     } else if (sellerNegMenuInput == 4) {
-      sellerNegMessage.add("Product doesn't match item description");
+      message.add("Product doesn't match item description");
       sellerNegMenu();
     }
   }
@@ -201,22 +191,22 @@ public class ebayMessageGenerator {
     System.out.println("4. Insufficient packaging. Item arrived damaged");
     int buyerNegMenuInput = Integer.parseInt(buyerNegMenuScanner.nextLine());
     if (buyerNegMenuInput == 0) {
-      printArrayList(buyerNegMessage);
-      FileHandler.copyToClipboard(buyerNegMessage);
+      printArrayList(message);
+      FileHandler.copyToClipboard(message);
       System.out.println("successfully copied to clipboard");
-      buyerNegMessage.clear();
+      message.clear();
       System.out.println();
     } else if (buyerNegMenuInput == 1) {
-      buyerNegMessage.add("Delayed shipping");
+      message.add("Delayed shipping");
       buyerNegMenu();
     } else if (buyerNegMenuInput == 2) {
-      buyerNegMessage.add("Seller hard to work with");
+      message.add("Seller hard to work with");
       buyerNegMenu();
     } else if (buyerNegMenuInput == 3) {
-      buyerNegMessage.add("Item never arrived");
+      message.add("Item never arrived");
       buyerNegMenu();
     } else if (buyerNegMenuInput == 4) {
-      buyerNegMessage.add("Insufficient packaging. Item arrived damaged");
+      message.add("Insufficient packaging. Item arrived damaged");
       buyerNegMenu();
     }
   }

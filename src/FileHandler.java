@@ -141,11 +141,37 @@ public class FileHandler {
     }
   }
 
-  public static void remove(String itemNameToRemove){
+  public static void removeItem(String itemName) {
     item itemToRemove = null;
-    // finish remove stuff
+
+    // Search for the item with matching itemName
+    for (item item : Products) {
+      if (item.getItemName().equals(itemName)) {
+        itemToRemove = item;
+      }
+    }
+
+    // Remove the item if found
+    if (itemToRemove != null) {
+      Products.remove(itemToRemove);
+      updateProductListFile();
+      System.out.println("Item '" + itemName + "' has been removed.");
+    } else {
+      System.out.println("Item '" + itemName + "' not found.");
+    }
   }
 
+  public static void printArrayList(ArrayList<String> arrList) {
+    for (int i = 0; i < arrList.size(); i++) {
+      System.out.print(arrList.get(i));
+      if (i != arrList.size() - 1) { // Only add comma and space if not the last element
+        System.out.print(", ");
+      } else { // Add a full stop at the end of the ArrayList
+        System.out.print(".");
+      }
+    }
+    System.out.println(); // Print a newline character after the ArrayList is printed
+  }
   public static void removeProductByName(String itemName) {
     item itemToRemove = null;
     for (item item : Products) {

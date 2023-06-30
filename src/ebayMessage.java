@@ -1,50 +1,64 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class aliExpressMessageGenerator {
-  static ArrayList<String> aliSellerPosMessage = new ArrayList<>();
-  static ArrayList<String> aliBuyerPosMessage = new ArrayList<>();
-  static ArrayList<String> aliSellerNegMessage = new ArrayList<>();
-  static ArrayList<String> aliBuyerNegMessage = new ArrayList<>();
+public class ebayMessage {
+  static ArrayList<String> message = new ArrayList<>();
 
+  public class ebayMessageGenerator{
+    String feedbackType;
+    boolean positiveOrNegative;
+
+    public ebayMessageGenerator(String feedbackType, boolean positiveOrNegative){
+      this.feedbackType = feedbackType;
+      this.positiveOrNegative = positiveOrNegative;
+
+      if ((feedbackType.equals("seller") && positiveOrNegative)){
+        sellerPosMenu();
+      } else if ((feedbackType.equals("seller") && !positiveOrNegative)) {
+        sellerNegMenu();
+      }
+
+      if ((feedbackType.equals("buyer") && positiveOrNegative)){
+        buyerPosMenu();
+      } else if ((feedbackType.equals("buyer") && !positiveOrNegative)) {
+        buyerNegMenu();
+      }
+    }
+    public String getFeedbackType(){
+      return feedbackType;
+    }
+    public boolean getpositiveOrNegative(){
+      return positiveOrNegative;
+    }
+  }
   public static void genMenu() {
+    String feedbackMode;
+    message.clear();
     Scanner genMenuInput = new Scanner(System.in);
-    System.out.println("Welcome to the AliExpress message generator.");
+    System.out.println("Welcome to the Ebay message generator.");
     System.out.println("Input the number corresponding to the option:");
     System.out.println("1.  For Seller Feedback");
     System.out.println("2. For Buyer feedback");
-    System.out.println("3. Thanks for buying message");
     int genUserMenuInput = Integer.parseInt(genMenuInput.nextLine());
     if (genUserMenuInput == 1) {
       System.out.println("Seller Feedback Selected");
+      feedbackMode = "seller";
       sellerFeedbackGen();
     } else if (genUserMenuInput == 2) {
       System.out.println("Buyer Feedback Selected");
+      feedbackMode = "buyer";
       buyerFeedbackGen();
-    } else if (genUserMenuInput == 3) {
-      System.out.println("Thanks for buying message Selected");
     }
   }
 
-  public static void printArrayList(ArrayList<String> arrList) {
-    for (int i = 0; i < arrList.size(); i++) {
-      System.out.print(arrList.get(i));
-      if (i != arrList.size() - 1) { // Only add comma and space if not the last element
-        System.out.print(", ");
-      } else { // Add a full stop at the end of the ArrayList
-        System.out.print(".");
-      }
-    }
-    System.out.println(); // Print a newline character after the ArrayList is printed
-  }
 
   public static void buyerFeedbackGen() {
     Scanner buyerPositiveOrNegativeScanner = new Scanner(System.in);
     System.out.println("Is the feedback Positive or Negative?");
     String buyerFeedbackType = buyerPositiveOrNegativeScanner.nextLine();
-    if (buyerFeedbackType.equals("Positive") || buyerFeedbackType.equals("positive")|| buyerFeedbackType.equals("p") || buyerFeedbackType.equals("P")) {
+    if (buyerFeedbackType.equals("Positive") || buyerFeedbackType.equals("positive")) {
       buyerPosMenu();
-    } else if (buyerFeedbackType.equals("Negative") || buyerFeedbackType.equals("negative") || buyerFeedbackType.equals("n") || buyerFeedbackType.equals("N")) {
+    } else if (buyerFeedbackType.equals("Negative") || buyerFeedbackType.equals("negative")) {
       buyerNegMenu();
     } else {
       buyerFeedbackGen();
@@ -55,9 +69,9 @@ public class aliExpressMessageGenerator {
     Scanner sellerPositiveOrNegativeScanner = new Scanner(System.in);
     System.out.println("Is the feedback Positive or Negative?");
     String sellerFeedbackType = sellerPositiveOrNegativeScanner.nextLine();
-    if (sellerFeedbackType.equals("Positive") || sellerFeedbackType.equals("positive") || sellerFeedbackType.equals("P") || sellerFeedbackType.equals("p")) {
+    if (sellerFeedbackType.equals("Positive") || sellerFeedbackType.equals("positive")) {
       sellerPosMenu();
-    } else if (sellerFeedbackType.equals("Negative") || sellerFeedbackType.equals("negative")|| sellerFeedbackType.equals("N") || sellerFeedbackType.equals("n")) {
+    } else if (sellerFeedbackType.equals("Negative") || sellerFeedbackType.equals("negative")) {
       sellerNegMenu();
     } else {
       sellerFeedbackGen();
@@ -81,43 +95,44 @@ public class aliExpressMessageGenerator {
     System.out.println("10. Impressive packaging");
     int sellerPosMenuInput = Integer.parseInt(sellerPosMenuScanner.nextLine());
     if (sellerPosMenuInput == 0) {
-      printArrayList(aliSellerPosMessage);
-      FileHandler.copyToClipboard(aliSellerPosMessage);
+      FileHandler.printArrayList(message);
+      FileHandler.copyToClipboard(message);
       System.out.println("successfully copied to clipboard");
-      aliSellerPosMessage.clear();
+      message.clear();
       System.out.println();
     } else if (sellerPosMenuInput == 1) {
-      aliSellerPosMessage.add("Great seller");
+      message.add("Great seller");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 2) {
-      aliSellerPosMessage.add("A++ Seller");
+      message.add("A++ Seller");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 3) {
-      aliSellerPosMessage.add("Quick Delivery");
+      message.add("Quick Delivery");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 4) {
-      aliSellerPosMessage.add("Product corresponds to description");
+      message.add("Product corresponds to description");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 5) {
-      aliSellerPosMessage.add("Excellent customer service");
+      message.add("Excellent customer service");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 6) {
-      aliSellerPosMessage.add("Highly recommended");
+      message.add("Highly recommended");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 7) {
-      aliSellerPosMessage.add("Smooth transaction");
+      message.add("Smooth transaction");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 8) {
-      aliSellerPosMessage.add("Reliable seller");
+      message.add("Reliable seller");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 9) {
-      aliSellerPosMessage.add("Fast shipping");
+      message.add("Fast shipping");
       sellerPosMenu();
     } else if (sellerPosMenuInput == 10) {
-      aliSellerPosMessage.add("Impressive packaging");
+      message.add("Impressive packaging");
       sellerPosMenu();
     }
   }
+
 
   public static void buyerPosMenu() {
     Scanner buyerPosMenuScanner = new Scanner(System.in);
@@ -131,28 +146,28 @@ public class aliExpressMessageGenerator {
     System.out.println("6. fast payment");
     int buyerPosMenuInput = Integer.parseInt(buyerPosMenuScanner.nextLine());
     if (buyerPosMenuInput == 0) {
-      printArrayList(aliBuyerPosMessage);
-      FileHandler.copyToClipboard(aliBuyerPosMessage);
+      FileHandler.printArrayList(message);
+      FileHandler.copyToClipboard(message);
       System.out.println("successfully copied to clipboard");
-      aliBuyerPosMessage.clear();
+      message.clear();
       System.out.println();
     } else if (buyerPosMenuInput == 1) {
-      aliBuyerPosMessage.add("Great buyer");
+      message.add("Great buyer");
       buyerPosMenu();
     } else if (buyerPosMenuInput == 2) {
-      aliBuyerPosMessage.add("Trustworthy buyer");
+      message.add("Trustworthy buyer");
       buyerPosMenu();
     } else if (buyerPosMenuInput == 3) {
-      aliBuyerPosMessage.add("Prompt payment");
+      message.add("Prompt payment");
       buyerPosMenu();
     } else if (buyerPosMenuInput == 4) {
-      aliBuyerPosMessage.add("Excellent communication ");
+      message.add("Excellent communication ");
       buyerPosMenu();
     } else if (buyerPosMenuInput == 5) {
-      aliBuyerPosMessage.add("very pleased");
+      message.add("very pleased");
       buyerPosMenu();
     } else if (buyerPosMenuInput == 6) {
-      aliBuyerPosMessage.add("fast payment");
+      message.add("fast payment");
       buyerPosMenu();
     }
   }
@@ -167,22 +182,22 @@ public class aliExpressMessageGenerator {
     System.out.println("4. Product doesn't match item description");
     int sellerNegMenuInput = Integer.parseInt(sellerNegMenuScanner.nextLine());
     if (sellerNegMenuInput == 0) {
-      printArrayList(aliSellerNegMessage);
-      FileHandler.copyToClipboard(aliSellerNegMessage);
+      FileHandler.printArrayList(message);
+      FileHandler.copyToClipboard(message);
       System.out.println("successfully copied to clipboard");
-      aliSellerNegMessage.clear();
+      message.clear();
       System.out.println();
     } else if (sellerNegMenuInput == 1) {
-      aliSellerNegMessage.add("Wouldn't Recommend seller");
+      message.add("Wouldn't Recommend seller");
       sellerNegMenu();
     } else if (sellerNegMenuInput == 2) {
-      aliSellerNegMessage.add("Avoid Seller");
+      message.add("Avoid Seller");
       sellerNegMenu();
     } else if (sellerNegMenuInput == 3) {
-      aliSellerNegMessage.add("Slow Delivery");
+      message.add("Slow Delivery");
       sellerNegMenu();
     } else if (sellerNegMenuInput == 4) {
-      aliSellerNegMessage.add("Product doesn't match item description");
+      message.add("Product doesn't match item description");
       sellerNegMenu();
     }
   }
@@ -197,22 +212,22 @@ public class aliExpressMessageGenerator {
     System.out.println("4. Insufficient packaging. Item arrived damaged");
     int buyerNegMenuInput = Integer.parseInt(buyerNegMenuScanner.nextLine());
     if (buyerNegMenuInput == 0) {
-      printArrayList(aliBuyerNegMessage);
-      FileHandler.copyToClipboard(aliBuyerNegMessage);
+      FileHandler.printArrayList(message);
+      FileHandler.copyToClipboard(message);
       System.out.println("successfully copied to clipboard");
-      aliBuyerNegMessage.clear();
+      message.clear();
       System.out.println();
     } else if (buyerNegMenuInput == 1) {
-      aliBuyerNegMessage.add("Delayed shipping");
+      message.add("Delayed shipping");
       buyerNegMenu();
     } else if (buyerNegMenuInput == 2) {
-      aliBuyerNegMessage.add("Seller hard to work with");
+      message.add("Seller hard to work with");
       buyerNegMenu();
     } else if (buyerNegMenuInput == 3) {
-      aliBuyerNegMessage.add("Item never arrived");
+      message.add("Item never arrived");
       buyerNegMenu();
     } else if (buyerNegMenuInput == 4) {
-      aliBuyerNegMessage.add("Insufficient packaging. Item arrived damaged");
+      message.add("Insufficient packaging. Item arrived damaged");
       buyerNegMenu();
     }
   }

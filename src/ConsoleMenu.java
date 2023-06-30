@@ -51,7 +51,7 @@ public class ConsoleMenu {
       System.out.println("0(TEMP).Clear Products");
       System.out.println("1. Display current items");
       System.out.println("2. Add a Product using the Console");
-      System.out.println("3. Dump a CSV into the Product List");
+      System.out.println("3. Remove an item");
       System.out.println("10. Input 10 to go back and select which part of the application you'd like to use.");
 
       // Calls different methods in FileHandler class depending on input
@@ -63,8 +63,8 @@ public class ConsoleMenu {
       } else if (mainInput == 2) {
         FileHandler.addItem();
       } else if (mainInput == 3) { // Need to create CSV method still!
-        System.out.println("Be careful! Make sure the CSV conforms to the layout of the table.");
-        FileHandler.readCSV();
+        System.out.println("Which item would you like to remove?");
+        FileHandler.removeItem(itemToRemoveName());
       } else if (mainInput == 10) {
         System.out.println("Going Back.");
         applicationMode();
@@ -72,6 +72,12 @@ public class ConsoleMenu {
         System.out.println("Invalid input.");
       }
     }
+  }
+
+  public static String itemToRemoveName(){
+    Scanner removeInput = new Scanner(System.in);
+    System.out.println("What is the name of the item you would like to remove?");
+    return removeInput.nextLine();
   }
 
   public static void messageGeneratorMenu() {
@@ -84,9 +90,9 @@ public class ConsoleMenu {
       System.out.println("3. Go back to mode selector");
       int webInput = Integer.parseInt(websiteSelector.nextLine());
       if (webInput == 1) {
-        ebayMessageGenerator.genMenu();
+        ebayMessage.genMenu();
       } else if (webInput == 2) {
-        aliExpressMessageGenerator.genMenu();
+        aliExpressMessage.genMenu();
       } else if (webInput == 3) {
         applicationMode();
       }
