@@ -1,4 +1,4 @@
-
+import java.util.Scanner;
 
 public class item {
   private String itemName;
@@ -49,5 +49,17 @@ public class item {
 
   public float getNetProfit() {
     return netProfit;
+  }
+
+  public void changeStockNum(int i){
+    int prodNumber = i;
+    Scanner stockInput = new Scanner(System.in);
+    int newStockValue = Integer.parseInt(stockInput.nextLine());
+    stockNum = newStockValue;
+    item itemIndex = FileHandler.Products.get(prodNumber);
+    String itemToPrint = itemIndex.toString();
+    double netProfit = itemIndex.getNetProfit();
+    itemToPrint += ", " + netProfit;
+    System.out.println(itemToPrint);
   }
 }

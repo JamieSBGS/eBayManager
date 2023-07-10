@@ -181,6 +181,7 @@ public class FileHandler {
       System.out.println(itemToPrint);
     }
   }
+
   public static void copyToClipboard(ArrayList<String> arraylistToCopy) {
     String myString = arraylistToCopy.toString();
     StringSelection stringSelection = new StringSelection(myString);
