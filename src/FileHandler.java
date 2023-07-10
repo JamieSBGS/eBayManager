@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.*;
@@ -141,25 +140,7 @@ public class FileHandler {
     }
   }
 
-  public static void removeItem(String itemName) {
-    item itemToRemove = null;
 
-    // Search for the item with matching itemName
-    for (item item : Products) {
-      if (item.getItemName().equals(itemName)) {
-        itemToRemove = item;
-      }
-    }
-
-    // Remove the item if found
-    if (itemToRemove != null) {
-      Products.remove(itemToRemove);
-      updateProductListFile();
-      System.out.println("Item '" + itemName + "' has been removed.");
-    } else {
-      System.out.println("Item '" + itemName + "' not found.");
-    }
-  }
 
   public static void printArrayList(ArrayList<String> arrList) {
     for (int i = 0; i < arrList.size(); i++) {
@@ -179,7 +160,6 @@ public class FileHandler {
         itemToRemove = item;
       }
     }
-
     if (itemToRemove != null) {
       Products.remove(itemToRemove);
       updateProductListFile();
