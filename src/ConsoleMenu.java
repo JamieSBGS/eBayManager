@@ -1,8 +1,11 @@
+
 import java.util.Scanner;
 
 public class ConsoleMenu {
 
   public static void startMenu() {
+    FileHandler.firstOpen();
+    FileHandler.timeCheck();
     FileHandler.checkSavedPath();
     FileHandler.readCSV();
     FileHandler.Notification.stockAlert();
@@ -38,6 +41,7 @@ public class ConsoleMenu {
       System.out.println("1. Display current items");
       System.out.println("2. Add a Product using the Console");
       System.out.println("3. Remove an item");
+      System.out.println("4. Print time to next Monthly/Yearly profit is calculated");
       System.out.println("10. Input 10 to go back and select which part of the application you'd like to use.");
 
       // Calls different methods in FileHandler class depending on input
@@ -50,8 +54,10 @@ public class ConsoleMenu {
         FileHandler.addItem();
       } else if (mainInput == 3) { // Need to create CSV method still!
         System.out.println("Which item would you like to remove?");
-        FileHandler.removeProductByName(itemToRemoveName());
-      } else if (mainInput == 10) {
+        FileHandler.removeProduct(itemToRemoveName());
+      } else if (mainInput == 4) { // Need to create CSV method still!
+        FileHandler.printDateDifference();
+     } else if (mainInput == 10) {
         System.out.println("Going Back.");
         applicationMode();
       } else {

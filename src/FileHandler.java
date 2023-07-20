@@ -1,15 +1,151 @@
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.awt.Toolkit;
 
 
 public class FileHandler {
+  static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
   public static ArrayList<item> Products = new ArrayList<>();
   private static String Path;
 
+  public static ArrayList<Float> monthlyNetGain = new ArrayList<>();
+  public static ArrayList<Float> yearlyNetGain = new ArrayList<>();
+  public static java.time.LocalDate programStartDate = firstOpen();
+  public static java.time.LocalDate targetMonth;
+  public static java.time.LocalDate targetYear;
+  public static java.time.LocalDate currentDate = java.time.LocalDate.now();
+
+  static {
+    if (programStartDate != null) {
+      targetMonth = programStartDate.plusMonths(1);
+      targetYear = programStartDate.plusYears(1);
+    }
+  }
+
+  public static LocalDate firstOpen() {
+    try {
+      File configFile = new File("config.txt");
+      if (!configFile.exists()) {
+        System.out.println("Couldn't find file");
+        writeToConfig(localDateToString(currentDate));
+        return currentDate;
+      }
+
+      try (BufferedReader br = new BufferedReader(new FileReader(configFile))) {
+        String line;
+        int lineCount = 1;
+        while ((line = br.readLine()) != null) {
+          if (lineCount == 2) {
+            if (!line.isEmpty()) {
+              try {
+                return LocalDate.parse(line, formatter);
+              } catch (DateTimeParseException ex) {
+                System.out.println("Invalid date format in config file. Writing current date.");
+                br.close(); // Close the reader before writing to the file
+                writeToConfig(localDateToString(currentDate));
+                return currentDate;
+              }
+            } else {
+              // If the line is empty, write the current date to the config file and return it
+              br.close(); // Close the reader before writing to the file
+              writeToConfig(localDateToString(currentDate));
+              return currentDate;
+            }
+          }
+          lineCount++;
+        }
+      }
+
+      // If line 2 is not found, write the current date to the config file and return it
+      writeToConfig(localDateToString(currentDate));
+      return currentDate;
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
+      e.printStackTrace();
+      return null;
+    }
+  }
+  public static void writeToConfig(String desiredText){
+    try (PrintWriter pr = new PrintWriter(new FileWriter("config.txt", true))) {
+      pr.println(desiredText);
+      System.out.println("Successfully written to config");
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println("Unsuccessfully written to config");
+    }
+  }
+  public static void writeToMonthAndYearFile(float desiredNum, String additionalText){
+    try (PrintWriter pr = new PrintWriter(new FileWriter("MonthlyYearlyProfit.txt", true))) {
+      String desiredText = Float.toString(desiredNum);
+      pr.println(additionalText + desiredText);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static String localDateToString(LocalDate date) {
+    if (date == null) {
+      return ""; // Return an empty string or any appropriate default value if date is null
+    }
+    return date.format(formatter);
+  }
+  public static void timeCheck(){
+    checkMonth();
+    checkYear();
+  }
+
+  public static void printDateDifference() {
+    Period period = Period.between(currentDate, targetYear);
+    int years = Math.abs(period.getYears());
+    int months = Math.abs(period.getMonths());
+    int days = Math.abs(period.getDays());
+
+    System.out.printf("Difference between Current Date and Target Year: %d years, %d months, %d days%n", years, months, days);
+
+     period = Period.between(currentDate, targetMonth);
+     years = Math.abs(period.getYears());
+     months = Math.abs(period.getMonths());
+     days = Math.abs(period.getDays());
+
+    System.out.printf("Difference between Current Date and Target Month: %d years, %d months, %d days%n", years, months, days);
+  }
+
+  public static void checkMonth() {
+    if (currentDate.isAfter(targetMonth)) {
+      String datesToPrint = "From (Month): " + targetMonth + " to " + targetMonth.plusMonths(1).minusDays(1);
+      printArrayList(convertFloatListToStringList(monthlyNetGain));
+      float sum = timeNetTotal(monthlyNetGain);
+      writeToMonthAndYearFile(sum, datesToPrint);
+      System.out.println("Successfully written this month's income to file: MonthlyYearlyProfit.txt");
+      targetMonth = targetMonth.plusMonths(1);
+    }
+  }
+  public static void checkYear() {
+    if (currentDate.isAfter(targetYear)) {
+      String datesToPrint = "From (Year): " + targetYear + " to " + targetYear.plusYears(1).minusDays(1);
+      printArrayList(convertFloatListToStringList(yearlyNetGain));
+      float sum = timeNetTotal(yearlyNetGain);
+      writeToMonthAndYearFile(sum, datesToPrint);
+      System.out.println("Successfully written this year's income to file: MonthlyYearlyProfit.txt");
+      targetYear = targetYear.plusYears(1);
+    }
+  }
+  public static ArrayList<String> convertFloatListToStringList(ArrayList<Float> floatList) {
+    ArrayList<String> stringList = new ArrayList<>();
+
+    for (Float f : floatList) {
+      String str = Float.toString(f);
+      stringList.add(str);
+    }
+    return stringList;
+  }
   public static void checkSavedPath() {
     try {
       FileReader fr = new FileReader("config.txt");
@@ -33,6 +169,16 @@ public class FileHandler {
     }
   }
 
+
+  public static float timeNetTotal(ArrayList<Float> floatList) {
+    float sum = 0.0f;
+
+    for (Float f : floatList) {
+      sum += f;
+    }
+
+    return sum;
+  }
   public static String setPath() {
     Scanner userPathInput = new Scanner(System.in);
     System.out.println("Insert path name of the .csv file which contains the product list");
@@ -153,7 +299,7 @@ public class FileHandler {
     }
     System.out.println(); // Print a newline character after the ArrayList is printed
   }
-  public static void removeProductByName(String itemName) {
+  public static void removeProduct(String itemName) {
     item itemToRemove = null;
     for (item item : Products) {
       if (item.getItemName().equals(itemName)) {
@@ -161,6 +307,7 @@ public class FileHandler {
       }
     }
     if (itemToRemove != null) {
+      removeStock(itemToRemove.getItemName());
       Products.remove(itemToRemove);
       updateProductListFile();
       System.out.println("Item removed successfully.");
@@ -169,12 +316,22 @@ public class FileHandler {
     }
   }
 
+  public static void removeStock(String itemName){
+    for (item item : Products) {
+      if (item.getItemName().equals(itemName)) {
+         float netValue = item.getNetProfit();
+         monthlyNetGain.add(netValue);
+         yearlyNetGain.add(netValue);
+         item.setStockNum(item.getStockNum()-1);
+      }
+    }
+  }
+
   public static void displayProducts() {
     System.out.println();
     System.out.println("The currently stored products:");
     System.out.println("Item Name, Price, Stock Number, Item Type, Item ID, Net Profit");
-    for (int i = 0; i < Products.size(); i++) {
-      item itemIndex = Products.get(i);
+    for (item itemIndex : Products) {
       String itemToPrint = itemIndex.toString();
       double netProfit = itemIndex.getNetProfit();
       itemToPrint += ", " + netProfit;
