@@ -11,6 +11,8 @@ import java.awt.Toolkit;
 
 
 public class FileHandler {
+  static int stockSoldPerMonth;
+  static int stockSoldPerYear;
   static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
   public static ArrayList<item> Products = new ArrayList<>();
   private static String Path;
@@ -50,6 +52,8 @@ public class FileHandler {
                 System.out.println("Invalid date format in config file. Writing current date.");
                 br.close(); // Close the reader before writing to the file
                 writeToConfig(localDateToString(currentDate));
+                stockSoldPerMonth = 0;
+                stockSoldPerYear = 0;
                 return currentDate;
               }
             } else {
@@ -89,6 +93,14 @@ public class FileHandler {
       e.printStackTrace();
     }
   }
+  public static void writeToMonthAndYearFile(int NumStock, String additionalText){
+    try (PrintWriter pr = new PrintWriter(new FileWriter("MonthlyYearlyProfit.txt", true))) {
+      String desiredText = Integer.toString(NumStock);
+      pr.println(additionalText + desiredText);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   public static String localDateToString(LocalDate date) {
     if (date == null) {
@@ -114,7 +126,7 @@ public class FileHandler {
      months = Math.abs(period.getMonths());
      days = Math.abs(period.getDays());
 
-    System.out.printf("Difference between Current Date and Target Month: %d years, %d months, %d days%n", years, months, days);
+    System.out.printf("Difference between Current Date and next month of : %d years, %d months, %d days%n", years, months, days);
   }
 
   public static void checkMonth() {
@@ -123,6 +135,7 @@ public class FileHandler {
       printArrayList(convertFloatListToStringList(monthlyNetGain));
       float sum = timeNetTotal(monthlyNetGain);
       writeToMonthAndYearFile(sum, datesToPrint);
+      writeToMonthAndYearFile(stockSoldPerMonth, "Stock Sold in month:");
       System.out.println("Successfully written this month's income to file: MonthlyYearlyProfit.txt");
       targetMonth = targetMonth.plusMonths(1);
     }
@@ -133,6 +146,7 @@ public class FileHandler {
       printArrayList(convertFloatListToStringList(yearlyNetGain));
       float sum = timeNetTotal(yearlyNetGain);
       writeToMonthAndYearFile(sum, datesToPrint);
+      writeToMonthAndYearFile(stockSoldPerYear, "Stock Sold in year:");
       System.out.println("Successfully written this year's income to file: MonthlyYearlyProfit.txt");
       targetYear = targetYear.plusYears(1);
     }
@@ -322,6 +336,8 @@ public class FileHandler {
          float netValue = item.getNetProfit();
          monthlyNetGain.add(netValue);
          yearlyNetGain.add(netValue);
+         stockSoldPerMonth++;
+         stockSoldPerYear++;
          item.setStockNum(item.getStockNum()-1);
       }
     }
