@@ -1,5 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        ConsoleMenu.startMenu();
+        //ConsoleMenu.startMenu();
+        GUI.main(args);
     }
 }
