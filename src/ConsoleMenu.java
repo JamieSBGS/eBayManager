@@ -9,6 +9,8 @@ public class ConsoleMenu {
     FileHandler.checkSavedPath();
     FileHandler.readCSV();
     FileHandler.Notification.stockAlert();
+      String[] args = new String[0];
+      GUI.main(args);
     System.out.println("Welcome to the Console Version of Ebay Manager.");
     applicationMode();
   }
@@ -51,7 +53,7 @@ public class ConsoleMenu {
       } else if (mainInput == 1) {
         FileHandler.displayProducts();
       } else if (mainInput == 2) {
-        FileHandler.addItem();
+        //FileHandler.addItem();
       } else if (mainInput == 3) { // Need to create CSV method still!
         System.out.println("Which item would you like to remove?");
         FileHandler.removeProduct(itemToRemoveName());

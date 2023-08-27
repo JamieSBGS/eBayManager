@@ -208,6 +208,16 @@ public class FileHandler {
       return setPath(); // Recursive call to restart the method
     }
   }
+  public static String setPath(String inputtedPath) {
+    if (inputtedPath != null && inputtedPath.endsWith(".csv")) {
+      Path = inputtedPath;
+      savePath();
+      return Path;
+    }else{
+      Path = null;
+      return Path;
+    }
+  }
 
   public static String getPath() {
     return Path;
@@ -217,11 +227,44 @@ public class FileHandler {
     try {
       File csvObj = new File(getPath());
       BufferedReader br = new BufferedReader(new FileReader(csvObj));
+
+      // Skip the header row
+      String header = br.readLine();
+
       String line;
       while ((line = br.readLine()) != null) {
         String[] values = line.split(",");
-        item csvProduct = new item(values[0], Float.parseFloat(values[1]), Integer.parseInt(values[2]), values[3],
-            values[4]);
+
+        // Make sure you're only parsing numeric values where appropriate
+        String itemName = values[0].trim();
+        float price = 0.0f; // Default value
+        int stockNum = 0;   // Default value
+        String itemType = "";
+        String itemID = "";
+
+        // Parse numeric values only if they are present and not column names
+        if (values.length >= 2) {
+          try {
+            price = Float.parseFloat(values[1].trim());
+          } catch (NumberFormatException ignored) {
+          }
+        }
+        if (values.length >= 3) {
+          try {
+            stockNum = Integer.parseInt(values[2].trim());
+          } catch (NumberFormatException ignored) {
+          }
+        }
+
+        if (values.length >= 4) {
+          itemType = values[3].trim();
+        }
+
+        if (values.length >= 5) {
+          itemID = values[4].trim();
+        }
+
+        item csvProduct = new item(itemName, price, stockNum, itemType, itemID);
         Products.add(csvProduct);
       }
       br.close();
@@ -259,29 +302,13 @@ public class FileHandler {
     Products.clear();
   }
 
-  public static void addItem() {
-    Scanner UserInput = new Scanner(System.in);
-    System.out.println("Insert Item name");
-    String fieldItemName = UserInput.nextLine();
-
-    System.out.println("Insert Price");
-    float fieldPrice = Float.parseFloat(UserInput.nextLine());
-
-    System.out.println("Insert how much of the item is in stock");
-    int fieldStockNum = Integer.parseInt(UserInput.nextLine());
-
-    System.out.println("Insert the item's category");
-    String fieldItemType = UserInput.nextLine();
-
-    System.out.println("Insert the item's ID");
-    String fieldItemID = UserInput.nextLine();
-
+  public static void addItem(String fieldItemName, float fieldPrice, int fieldStockNum,String fieldItemType, String fieldItemID) {
     item addedProduct = new item(fieldItemName, fieldPrice, fieldStockNum, fieldItemType, fieldItemID);
     Products.add(addedProduct);
 
     // Writing to CSV file part
     String[] addedProdFields = { addedProduct.getItemName(), String.valueOf(addedProduct.getPrice()),
-        String.valueOf(addedProduct.getStockNum()), addedProduct.getItemType(), addedProduct.getItemID() };
+            String.valueOf(addedProduct.getStockNum()), addedProduct.getItemType(), addedProduct.getItemID() };
 
     try {
       String addPath =getPath();
