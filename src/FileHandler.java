@@ -11,14 +11,21 @@ import java.awt.Toolkit;
 
 
 public class FileHandler {
-  static int stockSoldPerMonth;
-  static int stockSoldPerYear;
+  public static int stockSoldPerMonth;
+
+  public static int stockSoldPerYear;
   static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
   public static ArrayList<item> Products = new ArrayList<>();
   private static String Path;
 
   public static ArrayList<Float> monthlyNetGain = new ArrayList<>();
+  public static float monthlyNetGainFromConfig = readFloatFromLine(3);
   public static ArrayList<Float> yearlyNetGain = new ArrayList<>();
+  public static float yearlyNetGainFromConfig = readFloatFromLine(4);
+  public static float monthlyNetGainTotal;
+  public static float yearlyNetGainTotal;
+
+
   public static java.time.LocalDate programStartDate = firstOpen();
   public static java.time.LocalDate targetMonth;
   public static java.time.LocalDate targetYear;
@@ -29,6 +36,23 @@ public class FileHandler {
       targetMonth = programStartDate.plusMonths(1);
       targetYear = programStartDate.plusYears(1);
     }
+  }
+  public static void initializeProductList() {
+    Products.clear(); // Clear existing data
+    readCSV(); // Populate the list with data from CSV
+  }
+  public static void addStock(String itemName, int stockToAdd) {
+    for (item item : Products) {
+      if (item.getItemName().equals(itemName)) {
+        item.setStockNum(item.getStockNum()+ stockToAdd);
+        updateProductListFile();
+
+        System.out.println(stockToAdd + " stock added to " + item.getItemName());
+        return;
+      }
+    }
+
+    System.out.println("Item not found.");
   }
 
   public static LocalDate firstOpen() {
@@ -84,6 +108,86 @@ public class FileHandler {
       e.printStackTrace();
       System.out.println("Unsuccessfully written to config");
     }
+  }
+  public static void writeToConfig(int lineNumber, String desiredText) {
+    File inputFile = new File("config.txt");
+    File tempFile = new File("temp.txt");
+
+    try (BufferedReader br = new BufferedReader(new FileReader(inputFile));
+         BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
+
+      String line;
+      int currentLine = 1;
+
+      while ((line = br.readLine()) != null) {
+        if (currentLine == lineNumber) {
+          bw.write(desiredText);
+        } else {
+          bw.write(line);
+        }
+        bw.newLine();
+        currentLine++;
+      }
+
+      bw.flush();
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println("Error writing to config");
+    }
+
+    inputFile.delete();
+    tempFile.renameTo(inputFile);
+  }
+
+  public static float readFloatFromLine(int lineNumber) {
+    float number = -1; // Default value in case of error or invalid input
+
+    try (BufferedReader br = new BufferedReader(new FileReader("config.txt"))) {
+      String line;
+      float currentLine = 1;
+
+      while ((line = br.readLine()) != null) {
+        if (currentLine == lineNumber) {
+          try {
+            number = Float.parseFloat(line.trim());
+          } catch (NumberFormatException e) {
+            System.out.println("Error parsing number from line " + lineNumber);
+          }
+          break;
+        }
+        currentLine++;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println("Error reading config");
+    }
+
+    return number;
+  }
+  public static int readIntFromLine(int lineNumber) {
+    int number = 0; // Default value in case of no number being present
+
+    try (BufferedReader br = new BufferedReader(new FileReader("config.txt"))) {
+      String line;
+      float currentLine = 1;
+
+      while ((line = br.readLine()) != null) {
+        if (currentLine == lineNumber) {
+          try {
+            number = Integer.parseInt(line.trim());
+          } catch (NumberFormatException e) {
+            System.out.println("Error parsing number from line " + lineNumber);
+          }
+          break;
+        }
+        currentLine++;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println("Error reading config");
+    }
+
+    return number;
   }
   public static void writeToMonthAndYearFile(float desiredNum, String additionalText){
     try (PrintWriter pr = new PrintWriter(new FileWriter("MonthlyYearlyProfit.txt", true))) {
@@ -348,7 +452,7 @@ public class FileHandler {
       }
     }
     if (itemToRemove != null) {
-      removeStock(itemToRemove.getItemName());
+      removeStock(itemToRemove.getItemName(), itemToRemove.getStockNum());
       Products.remove(itemToRemove);
       updateProductListFile();
       System.out.println("Item removed successfully.");
@@ -357,17 +461,36 @@ public class FileHandler {
     }
   }
 
-  public static void removeStock(String itemName){
+  public static void removeStock(String itemName, int stockToRemove) {
     for (item item : Products) {
       if (item.getItemName().equals(itemName)) {
-         float netValue = item.getNetProfit();
-         monthlyNetGain.add(netValue);
-         yearlyNetGain.add(netValue);
-         stockSoldPerMonth++;
-         stockSoldPerYear++;
-         item.setStockNum(item.getStockNum()-1);
+        int currentStock = item.getStockNum();
+
+        if (stockToRemove <= currentStock) {
+          float netValue = item.getNetProfit();
+          updateConfigValues(stockToRemove);
+          monthlyNetGainTotal = monthlyNetGainTotal + (netValue * stockToRemove);
+          yearlyNetGainTotal = yearlyNetGainTotal + (netValue * stockToRemove);
+
+          item.setStockNum(currentStock - stockToRemove);
+          updateProductListFile();
+          writeToConfig(3, String.valueOf(monthlyNetGainTotal));
+          writeToConfig(4, String.valueOf(yearlyNetGainTotal));
+          writeToConfig(5, String.valueOf(stockSoldPerMonth));
+          writeToConfig(6, String.valueOf(stockSoldPerYear));
+          break; // Found the item, no need to continue looping
+        } else {
+          System.out.println("Not enough stock to remove.");
+        }
       }
     }
+  }
+  public static void updateConfigValues(int stock) {
+    // Update monthlyNetGainTotal and yearlyNetGainTotal values
+    monthlyNetGainTotal = timeNetTotal(monthlyNetGain) + monthlyNetGainFromConfig;
+    yearlyNetGainTotal = timeNetTotal(yearlyNetGain) + yearlyNetGainFromConfig;
+    stockSoldPerMonth = readIntFromLine(5)+stock;
+    stockSoldPerYear = readIntFromLine(6)+stock;
   }
 
   public static void displayProducts() {
@@ -390,12 +513,22 @@ public class FileHandler {
   }
 
   public static class Notification {
+    public static ArrayList<String> notifications = new ArrayList<>();
     public static void stockAlert() {
+      notifications.clear();
       for (item item : Products) {
         if (item.getStockNum() == 1) {
-          System.out.println("Alert: Only 1 " + item.getItemName() + " left.");
+          String warningMessage = "Alert: Only 1 " + item.getItemName() + " left.";
+          if (!notifications.contains(warningMessage)) {
+            System.out.println("Adding warning notification: " + warningMessage);
+            notifications.add(warningMessage);
+          }
         } else if (item.getStockNum() == 0) {
-          System.out.println("Alert: " + item.getItemName() + " is out of stock.");
+          String outOfStockMessage = "Alert: " + item.getItemName() + " is out of stock.";
+          if (!notifications.contains(outOfStockMessage)) {
+            System.out.println("Adding out of stock notification: " + outOfStockMessage);
+            notifications.add(outOfStockMessage);
+          }
         }
       }
     }

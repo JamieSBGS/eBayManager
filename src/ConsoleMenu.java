@@ -7,7 +7,7 @@ public class ConsoleMenu {
     FileHandler.firstOpen();
     FileHandler.timeCheck();
     FileHandler.checkSavedPath();
-    FileHandler.readCSV();
+    FileHandler.initializeProductList();
     FileHandler.Notification.stockAlert();
       String[] args = new String[0];
       GUI.main(args);

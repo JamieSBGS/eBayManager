@@ -13,13 +13,14 @@ public class GUI {
             JFrame frame = new JFrame("Ebay Manager GUI");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            int testWidth = (userScreenSize.width / 3)- 50;
+            int testWidth = (int) (userScreenSize.width /2.5);
             int testHeight = userScreenSize.height / 3;
 
             // Create buttons
             JButton messageButton = new JButton("Message Generator");
             JButton inventoryButton = new JButton("Inventory Manager");
             JButton ChangePath = new JButton("Change Path");
+            JButton checkNotifications = new JButton("Check Notifications");
 
             // Set layout manager
             frame.setLayout(new BorderLayout());
@@ -29,6 +30,7 @@ public class GUI {
             buttonPanel.add(messageButton);
             buttonPanel.add(inventoryButton);
             buttonPanel.add(ChangePath);
+            buttonPanel.add(checkNotifications);
 
             frame.add(buttonPanel, BorderLayout.NORTH);
 
@@ -69,7 +71,27 @@ public class GUI {
                     FileHandler.setPath(fieldPathName);
                 }
             });
+            checkNotifications.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    showNotifications();
+                }
+            });
         });
+    }
+    public static void showNotifications() {
+        JFrame messageFrame = new JFrame("Notifications");
+        messageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        messageFrame.setSize(450, 450);
+
+        JTextArea textArea = new JTextArea(5, 20);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        textArea.setEditable(false);
+        for (String element : FileHandler.Notification.notifications) {
+            textArea.append(element + "\n");
+        }
+        messageFrame.add(scrollPane);
+        messageFrame.setVisible(true);
     }
 
     public static void showMessageGeneratorMenu() {
@@ -111,12 +133,20 @@ public class GUI {
     public static void showInventoryManagerMenu() {
         JFrame inventoryFrame = new JFrame("Inventory Manager");
         inventoryFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        inventoryFrame.setSize(400, 70);
+        inventoryFrame.setSize(400, 200);
 
         // Create buttons for inventory manager
         JButton displayButton = new JButton("Display Items");
         JButton addButton = new JButton("Add Item");
         JButton removeButton = new JButton("Remove Item");
+        JButton removeStock = new JButton("Remove Stock for an item");
+        JButton addStock = new JButton("Add stock to item");
+
+        JTextArea textArea = new JTextArea(5, 20);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        textArea.setEditable(false);
+        final String newline = "\n";
+        textArea.append("Monthly net gain:" + FileHandler.readFloatFromLine(3) + newline + "Yearly Net Gain:"+ FileHandler.readFloatFromLine(4)+ newline+ "Stock Sold Per year:" + FileHandler.readIntFromLine(6) + newline + "Stock Sold Per Month:" + FileHandler.readIntFromLine(5) );
 
         // Set layout manager
         inventoryFrame.setLayout(new FlowLayout());
@@ -125,6 +155,9 @@ public class GUI {
         inventoryFrame.add(displayButton);
         inventoryFrame.add(addButton);
         inventoryFrame.add(removeButton);
+        inventoryFrame.add(removeStock);
+        inventoryFrame.add(addStock);
+        inventoryFrame.add(textArea);
 
         inventoryFrame.setVisible(true);
 
@@ -184,6 +217,22 @@ public class GUI {
             public void actionPerformed(ActionEvent e) {
                 String fieldItemName = JOptionPane.showInputDialog(inventoryFrame, "Enter Item Name:");
                 FileHandler.removeProduct(fieldItemName);
+            }
+        });
+        removeStock.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String fieldItemName = JOptionPane.showInputDialog(inventoryFrame,"Enter name of item that you'd like to remove stock from");
+                int fieldStockNumToRemove = Integer.parseInt(JOptionPane.showInputDialog(inventoryFrame,"How much stock would you like to remove?"));
+                FileHandler.removeStock(fieldItemName,fieldStockNumToRemove);
+            }
+        });
+        addStock.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String fieldItemName = JOptionPane.showInputDialog(inventoryFrame,"Enter name of item that you'd like to add stock to");
+                int fieldStockNumToRemove = Integer.parseInt(JOptionPane.showInputDialog(inventoryFrame,"How much stock would you like to add?"));
+                FileHandler.addStock(fieldItemName,fieldStockNumToRemove);
             }
         });
     }
