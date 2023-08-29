@@ -27,16 +27,10 @@ public class FileHandler {
 
 
   public static java.time.LocalDate programStartDate = firstOpen();
-  public static java.time.LocalDate targetMonth;
-  public static java.time.LocalDate targetYear;
+  public static java.time.LocalDate targetMonth = readDateFromLine(2);
+  public static java.time.LocalDate targetYear = readDateFromLine(7);
   public static java.time.LocalDate currentDate = java.time.LocalDate.now();
 
-  static {
-    if (programStartDate != null) {
-      targetMonth = programStartDate.plusMonths(1);
-      targetYear = programStartDate.plusYears(1);
-    }
-  }
   public static void initializeProductList() {
     Products.clear(); // Clear existing data
     readCSV(); // Populate the list with data from CSV
@@ -62,6 +56,15 @@ public class FileHandler {
         System.out.println("Couldn't find file");
         writeToConfig(1,getPath());
         writeToConfig(2,localDateToString(currentDate));
+        targetMonth = readDateFromLine(2);
+        targetMonth = targetMonth.plusMonths(1);
+        writeToConfig(2, String.valueOf(targetMonth));
+
+        writeToConfig(7,localDateToString(currentDate));
+        targetYear = readDateFromLine(7);
+        targetYear = targetYear.plusYears(1);
+        writeToConfig(7, String.valueOf(targetYear));
+
         return currentDate;
       }
 
@@ -165,6 +168,31 @@ public class FileHandler {
 
     return number;
   }
+  public static LocalDate readDateFromLine(int lineNumber) {
+    LocalDate desiredDate = currentDate; // Default value in case of error or invalid input
+
+    try (BufferedReader br = new BufferedReader(new FileReader("config.txt"))) {
+      String line;
+      float currentLine = 1;
+
+      while ((line = br.readLine()) != null) {
+        if (currentLine == lineNumber) {
+          try {
+            desiredDate = LocalDate.parse(line.trim());
+          } catch (NumberFormatException e) {
+            System.out.println("Error parsing number from line " + lineNumber);
+          }
+          break;
+        }
+        currentLine++;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println("Error reading config");
+    }
+
+    return desiredDate;
+  }
   public static int readIntFromLine(int lineNumber) {
     int number = 0; // Default value in case of no number being present
 
@@ -193,7 +221,14 @@ public class FileHandler {
   public static void writeToMonthAndYearFile(float desiredNum, String additionalText){
     try (PrintWriter pr = new PrintWriter(new FileWriter("MonthlyYearlyProfit.txt", true))) {
       String desiredText = Float.toString(desiredNum);
-      pr.println(additionalText + desiredText);
+      pr.println(additionalText +" "+ desiredText);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  public static void writeToMonthAndYearFile(String additionalText){
+    try (PrintWriter pr = new PrintWriter(new FileWriter("MonthlyYearlyProfit.txt", true))) {
+      pr.println(additionalText);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -201,7 +236,7 @@ public class FileHandler {
   public static void writeToMonthAndYearFile(int NumStock, String additionalText){
     try (PrintWriter pr = new PrintWriter(new FileWriter("MonthlyYearlyProfit.txt", true))) {
       String desiredText = Integer.toString(NumStock);
-      pr.println(additionalText + desiredText);
+      pr.println(additionalText + " "+ desiredText);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -214,6 +249,7 @@ public class FileHandler {
     return date.format(formatter);
   }
   public static void timeCheck(){
+
     checkMonth();
     checkYear();
   }
@@ -236,24 +272,31 @@ public class FileHandler {
 
   public static void checkMonth() {
     if (currentDate.isAfter(targetMonth)) {
-      String datesToPrint = "From (Month): " + targetMonth + " to " + targetMonth.plusMonths(1).minusDays(1);
-      printArrayList(convertFloatListToStringList(monthlyNetGain));
-      float sum = timeNetTotal(monthlyNetGain);
-      writeToMonthAndYearFile(sum, datesToPrint);
-      writeToMonthAndYearFile(stockSoldPerMonth, "Stock Sold in month:");
+      String datesToPrint = "From (Month): " + targetMonth + " to " + targetMonth.plusMonths(1);
+      float sum = readFloatFromLine(3);
+      writeToMonthAndYearFile(datesToPrint);
+      writeToMonthAndYearFile(sum,"Net Profit this month:");
+      writeToMonthAndYearFile(readIntFromLine(5), "Stock Sold in month:");
       System.out.println("Successfully written this month's income to file: MonthlyYearlyProfit.txt");
       targetMonth = targetMonth.plusMonths(1);
+      writeToConfig(2, String.valueOf(targetMonth));
+      writeToConfig(3,"0.0");
+      writeToConfig(5,"0");
     }
   }
   public static void checkYear() {
     if (currentDate.isAfter(targetYear)) {
       String datesToPrint = "From (Year): " + targetYear + " to " + targetYear.plusYears(1).minusDays(1);
       printArrayList(convertFloatListToStringList(yearlyNetGain));
-      float sum = timeNetTotal(yearlyNetGain);
-      writeToMonthAndYearFile(sum, datesToPrint);
-      writeToMonthAndYearFile(stockSoldPerYear, "Stock Sold in year:");
+      float sum = readFloatFromLine(4);
+      writeToMonthAndYearFile(datesToPrint);
+      writeToMonthAndYearFile(sum,"Net Profit this year:");
+      writeToMonthAndYearFile(readIntFromLine(6), "Stock Sold in year:");
       System.out.println("Successfully written this year's income to file: MonthlyYearlyProfit.txt");
       targetYear = targetYear.plusYears(1);
+      writeToConfig(7, String.valueOf(targetYear));
+      writeToConfig(4,"0.0");
+      writeToConfig(6,"0");
     }
   }
   public static ArrayList<String> convertFloatListToStringList(ArrayList<Float> floatList) {
@@ -513,6 +556,42 @@ public class FileHandler {
       itemToPrint += ", " + netProfit;
       System.out.println(itemToPrint);
     }
+  }
+  public static String yearToPrintToString(int i){
+    LocalDate targetYearToPrint = currentDate.plusYears(i);
+    int targetYearInt = targetYearToPrint.getYear();
+    String targetYearString = String.valueOf(targetYearInt);
+    return targetYearString;
+  }
+  public static String monthToPrintToString(int i){
+    LocalDate targetMonthToPrint = currentDate.plusMonths(i);
+    int targetMonthInt = targetMonthToPrint.getMonthValue();
+    String targetMonthString = String.valueOf(targetMonthInt);
+    if (targetMonthString.length() == 1) {
+      String temp = targetMonthString;
+      targetMonthString = "0";
+      targetMonthString = targetMonthString + temp;
+      return targetMonthString;
+    } else if (targetMonthString.length() > 2 || targetMonthString.length() < 1) {
+      System.out.println("error whilst printing month");
+      return null;
+    }
+    return targetMonthString;
+  }
+  public static String dayToPrintToString(){
+    LocalDate targetDayToPrint = currentDate;
+    int targetDayInt = targetDayToPrint.getDayOfMonth();
+    String targetDayString = String.valueOf(targetDayInt);
+    if (targetDayString.length() == 1) {
+      String temp = targetDayString;
+      targetDayString = "0";
+      targetDayString = targetDayString + temp;
+      return targetDayString;
+    } else if (targetDayString.length() > 2 || targetDayString.length() < 1) {
+      System.out.println("error whilst printing month");
+      return null;
+    }
+    return targetDayString;
   }
 
   public static void copyToClipboard(ArrayList<String> arraylistToCopy) {

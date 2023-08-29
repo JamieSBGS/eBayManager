@@ -3,6 +3,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -93,11 +94,12 @@ public class GUI {
                     int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to perform this action? It will delete everything currently in the config.", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                     if (result == JOptionPane.YES_OPTION) {
                         FileHandler.writeToConfig(1,"insert filepath to products ending in .csv");
-                        FileHandler.writeToConfig(2,FileHandler.localDateToString(FileHandler.currentDate));
+                        FileHandler.writeToConfig(2,FileHandler.yearToPrintToString(0) + "-"+ FileHandler.monthToPrintToString(1) + "-" + FileHandler.dayToPrintToString());
                         FileHandler.writeToConfig(3,"0.0");
                         FileHandler.writeToConfig(4,"0.0");
                         FileHandler.writeToConfig(5,"0");
                         FileHandler.writeToConfig(6,"0");
+                        FileHandler.writeToConfig(7, FileHandler.yearToPrintToString(1) + "-" + FileHandler.monthToPrintToString(0) + "-" +  FileHandler.dayToPrintToString());
 
                         System.out.println("Action performed!");
                     } else if (result == JOptionPane.NO_OPTION) {
@@ -314,7 +316,7 @@ public class GUI {
         textArea.setEditable(false);
         textArea.append("~Ebay Positive Seller Feedback~ To complete and copy message, press Finish and copy message to clipboard.");
 
-        FeedbackTypeFrame.setLayout(new BorderLayout());
+        FeedbackTypeFrame.setLayout(new FlowLayout());
 
         // Create buttons for inventory manager
         JButton FinishClipboard = new JButton("Finish and copy message to clipboard");
