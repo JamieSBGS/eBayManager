@@ -6,6 +6,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.awt.Toolkit;
 
@@ -114,33 +115,35 @@ public class FileHandler {
     }
   }
   public static void writeToConfig(int lineNumber, String desiredText) {
-    File inputFile = new File("config.txt");
-    File tempFile = new File("temp.txt");
+    List<String> lines = new ArrayList<>();
 
-    try (BufferedReader br = new BufferedReader(new FileReader(inputFile));
-         BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
-
+    try (BufferedReader br = new BufferedReader(new FileReader("config.txt"))) {
       String line;
       int currentLine = 1;
 
       while ((line = br.readLine()) != null) {
         if (currentLine == lineNumber) {
-          bw.write(desiredText);
+          lines.add(desiredText);
         } else {
-          bw.write(line);
+          lines.add(line);
         }
-        bw.newLine();
         currentLine++;
       }
-
-      bw.flush();
     } catch (IOException e) {
       e.printStackTrace();
-      System.out.println("Error writing to config");
+      System.out.println("Error reading config");
+      return;
     }
 
-    inputFile.delete();
-    tempFile.renameTo(inputFile);
+    try (PrintWriter pr = new PrintWriter(new FileWriter("config.txt", false))) {
+      for (String line : lines) {
+        pr.println(line);
+      }
+      System.out.println("Successfully written to config");
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println("Unsuccessfully written to config");
+    }
   }
 
   public static float readFloatFromLine(int lineNumber) {
@@ -512,8 +515,10 @@ public class FileHandler {
   }
 
   public static void removeStock(String itemName, int stockToRemove) {
-    monthlyNetGainTotal = readFloatFromLine(3);
-    yearlyNetGainTotal= readFloatFromLine(4);
+    float preexistingMonthlyNetTotal = readFloatFromLine(3);
+    float preexistingYearlyNetTotal = readFloatFromLine(4);
+    int preexistingStockSoldPerMonth = readIntFromLine(5);
+    int preexistingStockSoldPerYear = readIntFromLine(6);
 
     for (item item : Products) {
       if (item.getItemName().equals(itemName)) {
@@ -521,16 +526,28 @@ public class FileHandler {
 
         if (stockToRemove <= currentStock) {
           float netValue = item.getNetProfit();
-          updateConfigValues(stockToRemove);
-          monthlyNetGainTotal = monthlyNetGainTotal + (netValue * stockToRemove);
-          yearlyNetGainTotal = yearlyNetGainTotal + (netValue * stockToRemove);
+
+          // Update stockSoldPerMonth and stockSoldPerYear counters
+          stockSoldPerMonth = preexistingStockSoldPerMonth + stockToRemove;
+          stockSoldPerYear = preexistingStockSoldPerYear + stockToRemove;
 
           item.setStockNum(currentStock - stockToRemove);
           updateProductListFile();
-          writeToConfig(3, String.valueOf(monthlyNetGainTotal));
-          writeToConfig(4, String.valueOf(yearlyNetGainTotal));
+
+          // Calculate change in net value
+          float monthlyNetChange = netValue * stockToRemove;
+          float yearlyNetChange = netValue * stockToRemove;
+
+          // Calculate updated net totals
+          float updatedMonthlyNetTotal = preexistingMonthlyNetTotal + monthlyNetChange;
+          float updatedYearlyNetTotal = preexistingYearlyNetTotal + yearlyNetChange;
+
+          // Update and write to config
+          writeToConfig(3, String.valueOf(updatedMonthlyNetTotal));
+          writeToConfig(4, String.valueOf(updatedYearlyNetTotal));
           writeToConfig(5, String.valueOf(stockSoldPerMonth));
           writeToConfig(6, String.valueOf(stockSoldPerYear));
+
           break; // Found the item, no need to continue looping
         } else {
           System.out.println("Not enough stock to remove.");
@@ -538,6 +555,7 @@ public class FileHandler {
       }
     }
   }
+
   public static void updateConfigValues(int stock) {
     // Update monthlyNetGainTotal and yearlyNetGainTotal values
     monthlyNetGainTotal = timeNetTotal(monthlyNetGain) + monthlyNetGainFromConfig;

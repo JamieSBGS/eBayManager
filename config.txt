@@ -1,7 +1,7 @@
-insert filepath to products ending in .csv
+src/ProductList.csv
 2023-09-29
-0.0
-0.0
-0
-0
+39.864002
+39.864002
+5
+5
 2024-08-29

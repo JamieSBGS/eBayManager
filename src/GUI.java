@@ -80,6 +80,8 @@ public class GUI {
                 public void actionPerformed(ActionEvent e) {
                     String fieldPathName = JOptionPane.showInputDialog(frame, "Enter CSV File Path");
                     FileHandler.setPath(fieldPathName);
+                    JOptionPane.showMessageDialog( frame, "Restarting the application is recommended");
+
                 }
             });
             checkNotifications.addActionListener(new ActionListener() {
@@ -164,7 +166,7 @@ public class GUI {
     public static void showInventoryManagerMenu() {
         JFrame inventoryFrame = new JFrame("Inventory Manager");
         inventoryFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        inventoryFrame.setSize(700, 500);
+        inventoryFrame.setSize(userScreenSize.width/2, (int) (userScreenSize.height/2.15));
 
         DefaultTableModel tableModel = new DefaultTableModel(
                 new Object[]{"Item Name", "Price", "Stock", "Type", "ID", "Net Profit"}, 0);
