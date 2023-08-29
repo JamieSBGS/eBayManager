@@ -11,7 +11,7 @@ public class GUI {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Ebay Manager GUI");
+            JFrame frame = new JFrame("Ebay Manager");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
             int testWidth =  userScreenSize.width /2;
