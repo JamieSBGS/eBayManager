@@ -1,8 +1,12 @@
+import org.w3c.dom.traversal.NodeIterator;
+
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 
 public class GUI {
@@ -13,7 +17,7 @@ public class GUI {
             JFrame frame = new JFrame("Ebay Manager GUI");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            int testWidth = (int) (userScreenSize.width /2.5);
+            int testWidth = (int) (userScreenSize.width /2);
             int testHeight = userScreenSize.height / 3;
 
             // Create buttons
@@ -21,6 +25,14 @@ public class GUI {
             JButton inventoryButton = new JButton("Inventory Manager");
             JButton ChangePath = new JButton("Change Path");
             JButton checkNotifications = new JButton("Check Notifications");
+            JButton resetConfig = new JButton("Reset Config");
+
+            JTextArea textArea = new JTextArea(1, 0);
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            textArea.setEditable(false);
+            textArea.setForeground(Color.red);
+            textArea.append("Current Path:" + FileHandler.getPath() + "\n");
+
 
             // Set layout manager
             frame.setLayout(new BorderLayout());
@@ -31,6 +43,7 @@ public class GUI {
             buttonPanel.add(inventoryButton);
             buttonPanel.add(ChangePath);
             buttonPanel.add(checkNotifications);
+            buttonPanel.add(resetConfig);
 
             frame.add(buttonPanel, BorderLayout.NORTH);
 
@@ -44,6 +57,7 @@ public class GUI {
 
             // Add scaled image label to the content pane
             JLabel imageLabel = new JLabel(scaledImageIcon);
+            frame.add(textArea, BorderLayout.SOUTH);
             frame.add(imageLabel, BorderLayout.CENTER);
 
             frame.setSize(testWidth, testHeight);
@@ -75,6 +89,25 @@ public class GUI {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     showNotifications();
+                }
+            });
+            resetConfig.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to perform this action? It will delete everything currently in the config.", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                    if (result == JOptionPane.YES_OPTION) {
+                        FileHandler.writeToConfig(1,"insert filepath to products ending in .csv");
+                        FileHandler.writeToConfig(2,FileHandler.localDateToString(FileHandler.currentDate));
+                        FileHandler.writeToConfig(3,"0.0");
+                        FileHandler.writeToConfig(4,"0.0");
+                        FileHandler.writeToConfig(5,"0");
+                        FileHandler.writeToConfig(6,"0");
+
+                        System.out.println("Action performed!");
+                    } else if (result == JOptionPane.NO_OPTION) {
+                        // Action is cancelled
+                        System.out.println("Action cancelled.");
+                    }
                 }
             });
         });
@@ -133,70 +166,62 @@ public class GUI {
     public static void showInventoryManagerMenu() {
         JFrame inventoryFrame = new JFrame("Inventory Manager");
         inventoryFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        inventoryFrame.setSize(400, 200);
+        inventoryFrame.setSize(700, 500);
+
+        DefaultTableModel tableModel = new DefaultTableModel(
+                new Object[]{"Item Name", "Price", "Stock", "Type", "ID", "Net Profit"}, 0);
+
+        JTable table = new JTable(tableModel);
+
+        // Populate the table with data from the Products ArrayList
+        for (item itemIndex : FileHandler.Products) {
+            Object[] rowData = {
+                    itemIndex.getItemName(),
+                    itemIndex.getPrice(),
+                    itemIndex.getStockNum(),
+                    itemIndex.getItemType(),
+                    itemIndex.getItemID(),
+                    itemIndex.getNetProfit()
+            };
+            tableModel.addRow(rowData);
+        }
+
+        // Add the table to the content pane
+        JScrollPane scrollPane = new JScrollPane(table);
 
         // Create buttons for inventory manager
-        JButton displayButton = new JButton("Display Items");
         JButton addButton = new JButton("Add Item");
         JButton removeButton = new JButton("Remove Item");
         JButton removeStock = new JButton("Remove Stock for an item");
         JButton addStock = new JButton("Add stock to item");
 
+        //initialisation of textarea
         JTextArea textArea = new JTextArea(5, 20);
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        JScrollPane scrollPane2 = new JScrollPane(textArea);
         textArea.setEditable(false);
         final String newline = "\n";
         textArea.append("Monthly net gain:" + FileHandler.readFloatFromLine(3) + newline + "Yearly Net Gain:"+ FileHandler.readFloatFromLine(4)+ newline+ "Stock Sold Per year:" + FileHandler.readIntFromLine(6) + newline + "Stock Sold Per Month:" + FileHandler.readIntFromLine(5) );
 
+        JTextArea NotificationArea = new JTextArea(5, 20);
+        JScrollPane Notifications = new JScrollPane(NotificationArea);
+        NotificationArea.setEditable(false);
+        for (String element : FileHandler.Notification.notifications) {
+            NotificationArea.append(element + "\n");
+        }
         // Set layout manager
         inventoryFrame.setLayout(new FlowLayout());
 
         // Add buttons to the content pane
-        inventoryFrame.add(displayButton);
         inventoryFrame.add(addButton);
         inventoryFrame.add(removeButton);
         inventoryFrame.add(removeStock);
         inventoryFrame.add(addStock);
-        inventoryFrame.add(textArea);
+        inventoryFrame.add(scrollPane);
+        inventoryFrame.add(scrollPane2);
 
         inventoryFrame.setVisible(true);
 
         // Add action listeners for the inventory manager buttons
-        displayButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame displayFrame = new JFrame("Display Items");
-                displayFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                displayFrame.setSize(600, 400);
-                // Create a DefaultTableModel and JTable
-                DefaultTableModel tableModel = new DefaultTableModel(
-                        new Object[]{"Item Name", "Price", "Stock", "Type", "ID", "Net Profit"}, 0);
-
-                JTable table = new JTable(tableModel);
-
-                // Populate the table with data from the Products ArrayList
-                for (item itemIndex : FileHandler.Products) {
-                    Object[] rowData = {
-                            itemIndex.getItemName(),
-                            itemIndex.getPrice(),
-                            itemIndex.getStockNum(),
-                            itemIndex.getItemType(),
-                            itemIndex.getItemID(),
-                            itemIndex.getNetProfit()
-                    };
-                    tableModel.addRow(rowData);
-                }
-
-                // Set layout manager
-                displayFrame.setLayout(new BorderLayout());
-
-                // Add the table to the content pane
-                JScrollPane scrollPane = new JScrollPane(table);
-                displayFrame.add(scrollPane, BorderLayout.CENTER);
-
-                displayFrame.setVisible(true);
-            }
-        });
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -225,6 +250,8 @@ public class GUI {
                 String fieldItemName = JOptionPane.showInputDialog(inventoryFrame,"Enter name of item that you'd like to remove stock from");
                 int fieldStockNumToRemove = Integer.parseInt(JOptionPane.showInputDialog(inventoryFrame,"How much stock would you like to remove?"));
                 FileHandler.removeStock(fieldItemName,fieldStockNumToRemove);
+                textArea.setText("");
+                textArea.append("Monthly net gain:" + FileHandler.readFloatFromLine(3) + newline + "Yearly Net Gain:"+ FileHandler.readFloatFromLine(4)+ newline+ "Stock Sold Per year:" + FileHandler.readIntFromLine(6) + newline + "Stock Sold Per Month:" + FileHandler.readIntFromLine(5) );
             }
         });
         addStock.addActionListener(new ActionListener() {
@@ -298,7 +325,7 @@ public class GUI {
         textArea.setEditable(false);
         textArea.append("~Ebay Positive Seller Feedback~ To complete and copy message, press Finish and copy message to clipboard.");
 
-        FeedbackTypeFrame.setLayout(new FlowLayout());
+        FeedbackTypeFrame.setLayout(new BorderLayout());
 
         // Create buttons for inventory manager
         JButton FinishClipboard = new JButton("Finish and copy message to clipboard");

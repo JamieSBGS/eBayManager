@@ -60,7 +60,8 @@ public class FileHandler {
       File configFile = new File("config.txt");
       if (!configFile.exists()) {
         System.out.println("Couldn't find file");
-        writeToConfig(localDateToString(currentDate));
+        writeToConfig(1,getPath());
+        writeToConfig(2,localDateToString(currentDate));
         return currentDate;
       }
 
@@ -75,7 +76,7 @@ public class FileHandler {
               } catch (DateTimeParseException ex) {
                 System.out.println("Invalid date format in config file. Writing current date.");
                 br.close(); // Close the reader before writing to the file
-                writeToConfig(localDateToString(currentDate));
+                writeToConfig(2,localDateToString(currentDate));
                 stockSoldPerMonth = 0;
                 stockSoldPerYear = 0;
                 return currentDate;
@@ -83,7 +84,7 @@ public class FileHandler {
             } else {
               // If the line is empty, write the current date to the config file and return it
               br.close(); // Close the reader before writing to the file
-              writeToConfig(localDateToString(currentDate));
+              writeToConfig(2,localDateToString(currentDate));
               return currentDate;
             }
           }
@@ -92,7 +93,7 @@ public class FileHandler {
       }
 
       // If line 2 is not found, write the current date to the config file and return it
-      writeToConfig(localDateToString(currentDate));
+      writeToConfig(2,localDateToString(currentDate));
       return currentDate;
     } catch (IOException e) {
       System.out.println(e.getMessage());
@@ -312,20 +313,26 @@ public class FileHandler {
       return setPath(); // Recursive call to restart the method
     }
   }
-  public static String setPath(String inputtedPath) {
-    if (inputtedPath != null && inputtedPath.endsWith(".csv")) {
-      Path = inputtedPath;
-      savePath();
-      return Path;
-    }else{
-      Path = null;
-      return Path;
-    }
-  }
-
   public static String getPath() {
     return Path;
   }
+  public static String setPath(String inputtedPath) {
+    if (inputtedPath != getPath()) {
+      if (inputtedPath != null && inputtedPath.endsWith(".csv")) {
+        Path = inputtedPath;
+        writeToConfig(1, inputtedPath);
+        readCSV();
+        return Path;
+      } else {
+        Path = null;
+        return Path;
+      }
+      }else{
+        return "Path is same as previous path";
+    }
+  }
+
+
 
   public static void readCSV() {
     try {
@@ -462,6 +469,9 @@ public class FileHandler {
   }
 
   public static void removeStock(String itemName, int stockToRemove) {
+    monthlyNetGainTotal = readFloatFromLine(3);
+    yearlyNetGainTotal= readFloatFromLine(4);
+
     for (item item : Products) {
       if (item.getItemName().equals(itemName)) {
         int currentStock = item.getStockNum();
