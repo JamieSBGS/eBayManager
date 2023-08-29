@@ -1,13 +1,10 @@
-import org.w3c.dom.traversal.NodeIterator;
-
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class GUI {
     private static final Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -17,7 +14,7 @@ public class GUI {
             JFrame frame = new JFrame("Ebay Manager GUI");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            int testWidth = (int) (userScreenSize.width /2);
+            int testWidth =  userScreenSize.width /2;
             int testHeight = userScreenSize.height / 3;
 
             // Create buttons
@@ -28,7 +25,6 @@ public class GUI {
             JButton resetConfig = new JButton("Reset Config");
 
             JTextArea textArea = new JTextArea(1, 0);
-            JScrollPane scrollPane = new JScrollPane(textArea);
             textArea.setEditable(false);
             textArea.setForeground(Color.red);
             textArea.append("Current Path:" + FileHandler.getPath() + "\n");
@@ -48,7 +44,7 @@ public class GUI {
             frame.add(buttonPanel, BorderLayout.NORTH);
 
             // Load and scale the image
-            ImageIcon originalImageIcon = new ImageIcon(GUI.class.getResource("/ebaymanagerlogo.png"));
+            ImageIcon originalImageIcon = new ImageIcon(Objects.requireNonNull(GUI.class.getResource("/ebaymanagerlogo.png")));
             Image originalImage = originalImageIcon.getImage();
             int scaledWidth = (int) (testWidth/1.6);
             int scaledHeight = (int) (testHeight/1.6);
@@ -202,12 +198,6 @@ public class GUI {
         final String newline = "\n";
         textArea.append("Monthly net gain:" + FileHandler.readFloatFromLine(3) + newline + "Yearly Net Gain:"+ FileHandler.readFloatFromLine(4)+ newline+ "Stock Sold Per year:" + FileHandler.readIntFromLine(6) + newline + "Stock Sold Per Month:" + FileHandler.readIntFromLine(5) );
 
-        JTextArea NotificationArea = new JTextArea(5, 20);
-        JScrollPane Notifications = new JScrollPane(NotificationArea);
-        NotificationArea.setEditable(false);
-        for (String element : FileHandler.Notification.notifications) {
-            NotificationArea.append(element + "\n");
-        }
         // Set layout manager
         inventoryFrame.setLayout(new FlowLayout());
 
@@ -315,13 +305,12 @@ public class GUI {
     }
 
     public static void ebayPositiveSellerFeedback() {
-        ArrayList<String> ebayMessage = new ArrayList<String>();
+        ArrayList<String> ebayMessage = new ArrayList<>();
         JFrame FeedbackTypeFrame = new JFrame("Ebay Positive Seller Feedback");
         FeedbackTypeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         FeedbackTypeFrame.setSize(700, 300);
 
         JTextArea textArea = new JTextArea(5, 20);
-        JScrollPane scrollPane = new JScrollPane(textArea);
         textArea.setEditable(false);
         textArea.append("~Ebay Positive Seller Feedback~ To complete and copy message, press Finish and copy message to clipboard.");
 
@@ -396,7 +385,7 @@ public class GUI {
         HighlyRecommended.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ebayMessage.add("Highly Recommnded");
+                ebayMessage.add("Highly Recommended");
             }
         });
         SmoothTransaction.addActionListener(new ActionListener() {
@@ -426,13 +415,12 @@ public class GUI {
 
     }
     public static void ebayPositiveBuyerFeedback() {
-        ArrayList<String> ebayMessage = new ArrayList<String>();
+        ArrayList<String> ebayMessage = new ArrayList<>();
         JFrame FeedbackTypeFrame = new JFrame("Ebay Positive Buyer Feedback");
         FeedbackTypeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         FeedbackTypeFrame.setSize(700, 300);
 
         JTextArea textArea = new JTextArea(5, 20);
-        JScrollPane scrollPane = new JScrollPane(textArea);
         textArea.setEditable(false);
         textArea.append("~Ebay Positive Buyer Feedback~ To complete and copy message, press Finish and copy message to clipboard.");
 
@@ -505,13 +493,12 @@ public class GUI {
 
     }
     public static void ebaySellerNegativeFeedback() {
-        ArrayList<String> ebayMessage = new ArrayList<String>();
+        ArrayList<String> ebayMessage = new ArrayList<>();
         JFrame FeedbackTypeFrame = new JFrame("Ebay Negative Seller Feedback");
         FeedbackTypeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         FeedbackTypeFrame.setSize(700, 300);
 
         JTextArea textArea = new JTextArea(5, 20);
-        JScrollPane scrollPane = new JScrollPane(textArea);
         textArea.setEditable(false);
         textArea.append("~Ebay Negative Seller Feedback~ To complete and copy message, press Finish and copy message to clipboard.");
 
@@ -568,13 +555,12 @@ public class GUI {
 
     }
     public static void ebayBuyerNegativeFeedback() {
-        ArrayList<String> ebayMessage = new ArrayList<String>();
+        ArrayList<String> ebayMessage = new ArrayList<>();
         JFrame FeedbackTypeFrame = new JFrame("Ebay Negative Buyer Feedback");
         FeedbackTypeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         FeedbackTypeFrame.setSize(700, 300);
 
         JTextArea textArea = new JTextArea(5, 20);
-        JScrollPane scrollPane = new JScrollPane(textArea);
         textArea.setEditable(false);
         textArea.append("~Ebay Negative Buyer Feedback~ To complete and copy message, press Finish and copy message to clipboard.");
 
@@ -661,13 +647,12 @@ public class GUI {
         });
     }
     public static void aliNegativeSellerFeedback() {
-        ArrayList<String> aliMessage = new ArrayList<String>();
+        ArrayList<String> aliMessage = new ArrayList<>();
         JFrame FeedbackTypeFrame = new JFrame("AliExpress Negative Seller Feedback");
         FeedbackTypeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         FeedbackTypeFrame.setSize(700, 300);
 
         JTextArea textArea = new JTextArea(5, 20);
-        JScrollPane scrollPane = new JScrollPane(textArea);
         textArea.setEditable(false);
         textArea.append("~AliExpress Negative Seller Feedback~ To complete and copy message, press Finish and copy message to clipboard.");
 
@@ -724,13 +709,12 @@ public class GUI {
 
     }
     public static void aliPositiveSellerFeedback() {
-        ArrayList<String> aliMessage = new ArrayList<String>();
+        ArrayList<String> aliMessage = new ArrayList<>();
         JFrame FeedbackTypeFrame = new JFrame("AliExpress Positive Seller Feedback");
         FeedbackTypeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         FeedbackTypeFrame.setSize(700, 300);
 
         JTextArea textArea = new JTextArea(5, 20);
-        JScrollPane scrollPane = new JScrollPane(textArea);
         textArea.setEditable(false);
         textArea.append("~AliExpress Positive Seller Feedback~ To complete and copy message, press Finish and copy message to clipboard.");
 
@@ -805,7 +789,7 @@ public class GUI {
         HighlyRecommended.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                aliMessage.add("Highly Recommnded");
+                aliMessage.add("Highly Recommended");
             }
         });
         SmoothTransaction.addActionListener(new ActionListener() {
