@@ -3,62 +3,62 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class GUI {
+
     private static final Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Ebay Manager");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                JFrame frame = new JFrame("Ebay Manager");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            int testWidth =  userScreenSize.width /2;
-            int testHeight = userScreenSize.height / 3;
+                int testWidth = userScreenSize.width / 2;
+                int testHeight = userScreenSize.height / 3;
 
-            // Create buttons
-            JButton messageButton = new JButton("Message Generator");
-            JButton inventoryButton = new JButton("Inventory Manager");
-            JButton ChangePath = new JButton("Change Path");
-            JButton checkNotifications = new JButton("Check Notifications");
-            JButton resetConfig = new JButton("Reset Config");
+                // Create buttons
+                JButton messageButton = new JButton("Message Generator");
+                JButton inventoryButton = new JButton("Inventory Manager");
+                JButton ChangePath = new JButton("Change Path");
+                JButton checkNotifications = new JButton("Check Notifications");
+                JButton resetConfig = new JButton("Reset Config");
 
-            JTextArea textArea = new JTextArea(1, 0);
-            textArea.setEditable(false);
-            textArea.setForeground(Color.red);
-            textArea.append("Current Path:" + FileHandler.getPath() + "\n");
+                JTextArea textArea = new JTextArea(1, 0);
+                textArea.setEditable(false);
+                textArea.setForeground(Color.red);
+                textArea.setText("Current Path:" + FileHandler.getPath() + "\n");
 
 
-            // Set layout manager
-            frame.setLayout(new BorderLayout());
+                // Set layout manager
+                frame.setLayout(new BorderLayout());
 
-            // Add buttons to the content pane
-            JPanel buttonPanel = new JPanel();
-            buttonPanel.add(messageButton);
-            buttonPanel.add(inventoryButton);
-            buttonPanel.add(ChangePath);
-            buttonPanel.add(checkNotifications);
-            buttonPanel.add(resetConfig);
+                // Add buttons to the content pane
+                JPanel buttonPanel = new JPanel();
+                buttonPanel.add(messageButton);
+                buttonPanel.add(inventoryButton);
+                buttonPanel.add(ChangePath);
+                buttonPanel.add(checkNotifications);
+                buttonPanel.add(resetConfig);
 
-            frame.add(buttonPanel, BorderLayout.NORTH);
+                frame.add(buttonPanel, BorderLayout.NORTH);
 
-            // Load and scale the image
-            ImageIcon originalImageIcon = new ImageIcon(Objects.requireNonNull(GUI.class.getResource("/ebaymanagerlogo.png")));
-            Image originalImage = originalImageIcon.getImage();
-            int scaledWidth = (int) (testWidth/1.6);
-            int scaledHeight = (int) (testHeight/1.6);
-            Image scaledImage = originalImage.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
-            ImageIcon scaledImageIcon = new ImageIcon(scaledImage);
+                // Load and scale the image
+                ImageIcon originalImageIcon = new ImageIcon(Objects.requireNonNull(GUI.class.getResource("/ebaymanagerlogo.png")));
+                Image originalImage = originalImageIcon.getImage();
+                int scaledWidth = (int) (testWidth / 1.6);
+                int scaledHeight = (int) (testHeight / 1.6);
+                Image scaledImage = originalImage.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+                ImageIcon scaledImageIcon = new ImageIcon(scaledImage);
 
-            // Add scaled image label to the content pane
-            JLabel imageLabel = new JLabel(scaledImageIcon);
-            frame.add(textArea, BorderLayout.SOUTH);
-            frame.add(imageLabel, BorderLayout.CENTER);
+                // Add scaled image label to the content pane
+                JLabel imageLabel = new JLabel(scaledImageIcon);
+                frame.add(textArea, BorderLayout.SOUTH);
+                frame.add(imageLabel, BorderLayout.CENTER);
 
-            frame.setSize(testWidth, testHeight);
-            frame.setVisible(true);
+                frame.setSize(testWidth, testHeight);
+                frame.setVisible(true);
 
             // Add action listeners for the buttons
             messageButton.addActionListener(new ActionListener() {
@@ -79,9 +79,13 @@ public class GUI {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     String fieldPathName = JOptionPane.showInputDialog(frame, "Enter CSV File Path");
+                    if (fieldPathName.equals(null) || fieldPathName.trim().isEmpty()) {
+                        System.out.println("null path");
+                        return;
+                    }
                     FileHandler.setPath(fieldPathName);
-                    JOptionPane.showMessageDialog( frame, "Restarting the application is recommended");
-
+                    JOptionPane.showMessageDialog(frame, "Restarting the application is recommended");
+                    textArea.setText("Current Path:" + FileHandler.getPath() + "\n");
                 }
             });
             checkNotifications.addActionListener(new ActionListener() {
@@ -104,6 +108,7 @@ public class GUI {
                         FileHandler.writeToConfig(7, FileHandler.yearToPrintToString(1) + "-" + FileHandler.monthToPrintToString(0) + "-" +  FileHandler.dayToPrintToString());
 
                         System.out.println("Action performed!");
+                        textArea.setText("Current Path:" + FileHandler.getPath() + "\n");
                     } else if (result == JOptionPane.NO_OPTION) {
                         // Action is cancelled
                         System.out.println("Action cancelled.");
@@ -166,7 +171,7 @@ public class GUI {
     public static void showInventoryManagerMenu() {
         JFrame inventoryFrame = new JFrame("Inventory Manager");
         inventoryFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        inventoryFrame.setSize(userScreenSize.width/2, (int) (userScreenSize.height/2.15));
+        inventoryFrame.setSize(userScreenSize.width/2, (int) (userScreenSize.height*0.6));
 
         DefaultTableModel tableModel = new DefaultTableModel(
                 new Object[]{"Item Name", "Price", "Stock", "Type", "ID", "Net Profit"}, 0);
@@ -215,12 +220,20 @@ public class GUI {
 
         inventoryFrame.setVisible(true);
 
+
+
         // Add action listeners for the inventory manager buttons
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String fieldItemName = JOptionPane.showInputDialog(inventoryFrame, "Enter Item Name:");
+                if (fieldItemName.equals(null)|| fieldItemName.trim().isEmpty()){
+                    return;
+                }
                 String fieldPriceStr = JOptionPane.showInputDialog(inventoryFrame, "Enter Price:");
+                if (fieldPriceStr == null|| fieldPriceStr.trim().isEmpty()){
+                    return;
+                }
                 float fieldPrice = Float.parseFloat(fieldPriceStr);
                 String fieldStockNumStr = JOptionPane.showInputDialog(inventoryFrame, "Enter Stock Number:");
                 int fieldStockNum = Integer.parseInt(fieldStockNumStr);
@@ -228,6 +241,22 @@ public class GUI {
                 String fieldItemID = JOptionPane.showInputDialog(inventoryFrame, "Enter Item ID:");
 
                 FileHandler.addItem(fieldItemName, fieldPrice, fieldStockNum, fieldItemType, fieldItemID);
+
+                table.clearSelection();
+                tableModel.setRowCount(0);
+                for (item itemIndex : FileHandler.Products) {
+                    Object[] rowData = {
+                            itemIndex.getItemName(),
+                            itemIndex.getPrice(),
+                            itemIndex.getStockNum(),
+                            itemIndex.getItemType(),
+                            itemIndex.getItemID(),
+                            itemIndex.getNetProfit()
+                    };
+                    tableModel.addRow(rowData);
+                }
+                FileHandler.Notification.stockAlert();
+
             }
         });
 
@@ -235,25 +264,82 @@ public class GUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String fieldItemName = JOptionPane.showInputDialog(inventoryFrame, "Enter Item Name:");
+                if (fieldItemName.equals(null)|| fieldItemName.trim().isEmpty()){
+                    return;
+                }
                 FileHandler.removeProduct(fieldItemName);
+
+                table.clearSelection();
+                tableModel.setRowCount(0);
+                for (item itemIndex : FileHandler.Products) {
+                    Object[] rowData = {
+                            itemIndex.getItemName(),
+                            itemIndex.getPrice(),
+                            itemIndex.getStockNum(),
+                            itemIndex.getItemType(),
+                            itemIndex.getItemID(),
+                            itemIndex.getNetProfit()
+                    };
+                    tableModel.addRow(rowData);
+                }
+                FileHandler.Notification.stockAlert();
+
             }
         });
         removeStock.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String fieldItemName = JOptionPane.showInputDialog(inventoryFrame,"Enter name of item that you'd like to remove stock from");
+                if (fieldItemName.equals(null)|| fieldItemName.trim().isEmpty()){
+                    return;
+                }
                 int fieldStockNumToRemove = Integer.parseInt(JOptionPane.showInputDialog(inventoryFrame,"How much stock would you like to remove?"));
                 FileHandler.removeStock(fieldItemName,fieldStockNumToRemove);
                 textArea.setText("");
                 textArea.append("Monthly net gain:" + FileHandler.readFloatFromLine(3) + newline + "Yearly Net Gain:"+ FileHandler.readFloatFromLine(4)+ newline+ "Stock Sold Per year:" + FileHandler.readIntFromLine(6) + newline + "Stock Sold Per Month:" + FileHandler.readIntFromLine(5) );
+                table.clearSelection();
+                tableModel.setRowCount(0);
+                for (item itemIndex : FileHandler.Products) {
+                    Object[] rowData = {
+                            itemIndex.getItemName(),
+                            itemIndex.getPrice(),
+                            itemIndex.getStockNum(),
+                            itemIndex.getItemType(),
+                            itemIndex.getItemID(),
+                            itemIndex.getNetProfit()
+                    };
+                    tableModel.addRow(rowData);
+                }
+                FileHandler.Notification.stockAlert();
+
             }
         });
         addStock.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String fieldItemName = JOptionPane.showInputDialog(inventoryFrame,"Enter name of item that you'd like to add stock to");
+                if (fieldItemName.equals(null)|| fieldItemName.trim().isEmpty()){
+                    return;
+                }
                 int fieldStockNumToRemove = Integer.parseInt(JOptionPane.showInputDialog(inventoryFrame,"How much stock would you like to add?"));
+                if (fieldItemName.trim().isEmpty()){
+                    return;
+                }
                 FileHandler.addStock(fieldItemName,fieldStockNumToRemove);
+                table.clearSelection();
+                tableModel.setRowCount(0);
+                for (item itemIndex : FileHandler.Products) {
+                    Object[] rowData = {
+                            itemIndex.getItemName(),
+                            itemIndex.getPrice(),
+                            itemIndex.getStockNum(),
+                            itemIndex.getItemType(),
+                            itemIndex.getItemID(),
+                            itemIndex.getNetProfit()
+                    };
+                    tableModel.addRow(rowData);
+                }
+                FileHandler.Notification.stockAlert();
             }
         });
     }
