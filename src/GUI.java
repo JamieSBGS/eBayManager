@@ -79,7 +79,7 @@ public class GUI {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     String fieldPathName = JOptionPane.showInputDialog(frame, "Enter CSV File Path");
-                    if (fieldPathName.equals(null) || fieldPathName.trim().isEmpty()) {
+                    if (fieldPathName == null || fieldPathName.trim().isEmpty()) {
                         System.out.println("null path");
                         return;
                     }
@@ -227,7 +227,7 @@ public class GUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String fieldItemName = JOptionPane.showInputDialog(inventoryFrame, "Enter Item Name:");
-                if (fieldItemName.equals(null)|| fieldItemName.trim().isEmpty()){
+                if (fieldItemName == null || fieldItemName.trim().isEmpty()){
                     return;
                 }
                 String fieldPriceStr = JOptionPane.showInputDialog(inventoryFrame, "Enter Price:");
@@ -236,9 +236,18 @@ public class GUI {
                 }
                 float fieldPrice = Float.parseFloat(fieldPriceStr);
                 String fieldStockNumStr = JOptionPane.showInputDialog(inventoryFrame, "Enter Stock Number:");
+                if (fieldStockNumStr == null || fieldItemName.trim().isEmpty()){
+                    return;
+                }
                 int fieldStockNum = Integer.parseInt(fieldStockNumStr);
                 String fieldItemType = JOptionPane.showInputDialog(inventoryFrame, "Enter Item Type:");
+                if (fieldItemType == null || fieldItemName.trim().isEmpty()){
+                    return;
+                }
                 String fieldItemID = JOptionPane.showInputDialog(inventoryFrame, "Enter Item ID:");
+                if (fieldItemID == null || fieldItemName.trim().isEmpty()){
+                    return;
+                }
 
                 FileHandler.addItem(fieldItemName, fieldPrice, fieldStockNum, fieldItemType, fieldItemID);
 
@@ -264,7 +273,7 @@ public class GUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String fieldItemName = JOptionPane.showInputDialog(inventoryFrame, "Enter Item Name:");
-                if (fieldItemName.equals(null)|| fieldItemName.trim().isEmpty()){
+                if (fieldItemName == null || fieldItemName.trim().isEmpty()){
                     return;
                 }
                 FileHandler.removeProduct(fieldItemName);
@@ -290,7 +299,7 @@ public class GUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String fieldItemName = JOptionPane.showInputDialog(inventoryFrame,"Enter name of item that you'd like to remove stock from");
-                if (fieldItemName.equals(null)|| fieldItemName.trim().isEmpty()){
+                if (fieldItemName == null || fieldItemName.trim().isEmpty()){
                     return;
                 }
                 int fieldStockNumToRemove = Integer.parseInt(JOptionPane.showInputDialog(inventoryFrame,"How much stock would you like to remove?"));
@@ -318,7 +327,7 @@ public class GUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String fieldItemName = JOptionPane.showInputDialog(inventoryFrame,"Enter name of item that you'd like to add stock to");
-                if (fieldItemName.equals(null)|| fieldItemName.trim().isEmpty()){
+                if (fieldItemName == null || fieldItemName.trim().isEmpty()){
                     return;
                 }
                 int fieldStockNumToRemove = Integer.parseInt(JOptionPane.showInputDialog(inventoryFrame,"How much stock would you like to add?"));
