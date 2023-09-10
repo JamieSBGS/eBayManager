@@ -303,6 +303,10 @@ public class GUI {
                     return;
                 }
                 int fieldStockNumToRemove = Integer.parseInt(JOptionPane.showInputDialog(inventoryFrame,"How much stock would you like to remove?"));
+                if (fieldStockNumToRemove <0){
+                    JOptionPane.showMessageDialog(inventoryFrame,"Invalid Input");
+                    return;
+                }
                 FileHandler.removeStock(fieldItemName,fieldStockNumToRemove);
                 textArea.setText("");
                 textArea.append("Monthly net gain:" + FileHandler.readFloatFromLine(3) + newline + "Yearly Net Gain:"+ FileHandler.readFloatFromLine(4)+ newline+ "Stock Sold Per year:" + FileHandler.readIntFromLine(6) + newline + "Stock Sold Per Month:" + FileHandler.readIntFromLine(5) );
