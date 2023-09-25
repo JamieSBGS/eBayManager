@@ -1,8 +1,10 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -24,7 +26,6 @@ public class GUI {
                 JButton ChangePath = new JButton("Change Path");
                 JButton checkNotifications = new JButton("Check Notifications");
                 JButton resetConfig = new JButton("Reset Config");
-
                 JTextArea textArea = new JTextArea(1, 0);
                 textArea.setEditable(false);
                 textArea.setForeground(Color.red);
@@ -41,6 +42,7 @@ public class GUI {
                 buttonPanel.add(ChangePath);
                 buttonPanel.add(checkNotifications);
                 buttonPanel.add(resetConfig);
+                buttonPanel.setBackground(Color.white);
 
                 frame.add(buttonPanel, BorderLayout.NORTH);
 
@@ -59,14 +61,9 @@ public class GUI {
 
                 frame.setSize(testWidth, testHeight);
                 frame.setVisible(true);
-
+                frame.setResizable(false);
             // Add action listeners for the buttons
-            messageButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    showMessageGeneratorMenu();
-                }
-            });
+            messageButton.addActionListener(e -> showMessageGeneratorMenu());
 
             inventoryButton.addActionListener(new ActionListener() {
                 @Override
@@ -78,14 +75,24 @@ public class GUI {
             ChangePath.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String fieldPathName = JOptionPane.showInputDialog(frame, "Enter CSV File Path");
-                    if (fieldPathName == null || fieldPathName.trim().isEmpty()) {
-                        System.out.println("null path");
-                        return;
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setDialogTitle("Choose CSV File Path");
+                    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    fileChooser.setFileFilter(new FileNameExtensionFilter("CSV Files", "csv"));
+
+                    int returnVal = fileChooser.showOpenDialog(frame);
+
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        // User chose a file
+                        File selectedFile = fileChooser.getSelectedFile();
+                        String filePath = selectedFile.getAbsolutePath();
+
+                        FileHandler.setPath(filePath);
+                        JOptionPane.showMessageDialog(frame, "Restarting the application is recommended");
+                        textArea.setText("Current Path:" + FileHandler.getPath() + "\n");
+                    } else {
+                        System.out.println("Open command cancelled by user.");
                     }
-                    FileHandler.setPath(fieldPathName);
-                    JOptionPane.showMessageDialog(frame, "Restarting the application is recommended");
-                    textArea.setText("Current Path:" + FileHandler.getPath() + "\n");
                 }
             });
             checkNotifications.addActionListener(new ActionListener() {
@@ -149,6 +156,7 @@ public class GUI {
         messageFrame.add(aliButton);
 
         messageFrame.setVisible(true);
+        messageFrame.setResizable(false);
 
         // Add action listeners for the message generator buttons
         ebayButton.addActionListener(new ActionListener() {
@@ -173,6 +181,15 @@ public class GUI {
         inventoryFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         inventoryFrame.setSize(userScreenSize.width/2, (int) (userScreenSize.height*0.6));
 
+        JComboBox<String> sortComboBox = new JComboBox<>(new String[]{
+                "Sort Table",
+                "Sort Alphabetically",
+                "Sort By Net Profit, Ascending",
+                "Sort By Net Profit, Descending",
+                "Sort by ID",
+                "Sort by Stock, Ascending",
+                "Sort by Stock, Descending"
+        });
         DefaultTableModel tableModel = new DefaultTableModel(
                 new Object[]{"Item Name", "Price", "Stock", "Type", "ID", "Net Profit"}, 0);
 
@@ -200,6 +217,8 @@ public class GUI {
         JButton removeStock = new JButton("Remove Stock for an item");
         JButton addStock = new JButton("Add stock to item");
 
+
+
         //initialisation of textarea
         JTextArea textArea = new JTextArea(5, 20);
         JScrollPane scrollPane2 = new JScrollPane(textArea);
@@ -217,12 +236,102 @@ public class GUI {
         inventoryFrame.add(addStock);
         inventoryFrame.add(scrollPane);
         inventoryFrame.add(scrollPane2);
-
+        inventoryFrame.add(sortComboBox);
         inventoryFrame.setVisible(true);
+        inventoryFrame.setResizable(false);
 
+        sortComboBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedItem = (String) sortComboBox.getSelectedItem();
+                if (selectedItem.equals("Sort Alphabetically")) {
+                    int n = FileHandler.Products.size();
+                    for (int i = 0; i < n - 1; i++) {
+                        for (int j = 0; j < n - i - 1; j++) {
+                            if (FileHandler.Products.get(j).getItemName().compareTo(FileHandler.Products.get(j + 1).getItemName()) > 0) {
+                                // Swap items if they are in the wrong order
+                                item temp = FileHandler.Products.get(j);
+                                FileHandler.Products.set(j, FileHandler.Products.get(j + 1));
+                                FileHandler.Products.set(j + 1, temp);
+                            }
+                        }
+                    }
+                } else if (selectedItem.equals("Sort By Net Profit, Ascending")){
+                    int n = FileHandler.Products.size();
+                    for (int i = 0; i < n - 1; i++) {
+                        for (int j = 0; j < n - i - 1; j++) {
+                            if (FileHandler.Products.get(j).getNetProfit() > FileHandler.Products.get(j + 1).getNetProfit()) {
+                                // Swap items if they are in the wrong order
+                                item temp = FileHandler.Products.get(j);
+                                FileHandler.Products.set(j, FileHandler.Products.get(j + 1));
+                                FileHandler.Products.set(j + 1, temp);
+                            }
+                        }
+                    }
+                }else if (selectedItem.equals("Sort By Net Profit, Descending")){
+                    int n = FileHandler.Products.size();
+                    for (int i = 0; i < n - 1; i++) {
+                        for (int j = 0; j < n - i - 1; j++) {
+                            if (FileHandler.Products.get(j).getNetProfit() < FileHandler.Products.get(j + 1).getNetProfit()) {
+                                // Swap items if they are in the wrong order
+                                item temp = FileHandler.Products.get(j);
+                                FileHandler.Products.set(j, FileHandler.Products.get(j + 1));
+                                FileHandler.Products.set(j + 1, temp);
+                            }
+                        }
+                    }
+                }else if (selectedItem.equals("Sort by ID")){
+                    int n = FileHandler.Products.size();
+                    for (int i = 0; i < n - 1; i++) {
+                        for (int j = 0; j < n - i - 1; j++) {
+                            long itemID1 = Long.parseLong(FileHandler.Products.get(j).getItemID());
+                            long itemID2 = Long.parseLong(FileHandler.Products.get(j + 1).getItemID());
+                            if (itemID1 > itemID2) {
+                                item temp = FileHandler.Products.get(j);
+                                FileHandler.Products.set(j, FileHandler.Products.get(j + 1));
+                                FileHandler.Products.set(j + 1, temp);
+                            }
+                        }
+                    }
+                } else if (selectedItem.equals("Sort by Stock, Ascending")) {
+                    int n = FileHandler.Products.size();
+                    for (int i = 0; i < n - 1; i++) {
+                        for (int j = 0; j < n - i - 1; j++) {
+                            if (FileHandler.Products.get(j).getStockNum() > FileHandler.Products.get(j + 1).getStockNum()) {
+                                // Swap items if they are in the wrong order
+                                item temp = FileHandler.Products.get(j);
+                                FileHandler.Products.set(j, FileHandler.Products.get(j + 1));
+                                FileHandler.Products.set(j + 1, temp);
+                            }
+                        }
+                    }
+                } else if (selectedItem.equals("Sort by Stock, Descending")) {
+                    int n = FileHandler.Products.size();
+                    for (int i = 0; i < n - 1; i++) {
+                        for (int j = 0; j < n - i - 1; j++) {
+                            if (FileHandler.Products.get(j).getStockNum() < FileHandler.Products.get(j + 1).getStockNum()) {
+                                // Swap items if they are in the wrong order
+                                item temp = FileHandler.Products.get(j);
+                                FileHandler.Products.set(j, FileHandler.Products.get(j + 1));
+                                FileHandler.Products.set(j + 1, temp);
+                            }
+                        }
+                    }
+                }
+                table.clearSelection();
+                tableModel.setRowCount(0);
+                for (item itemIndex : FileHandler.Products) {
+                    Object[] rowData = {
+                            itemIndex.getItemName(),
+                            itemIndex.getPrice(),
+                            itemIndex.getStockNum(),
+                            itemIndex.getItemType(),
+                            itemIndex.getItemID(),
+                            itemIndex.getNetProfit()
+                    };
+                    tableModel.addRow(rowData);
+                }
+            }});
 
-
-        // Add action listeners for the inventory manager buttons
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -377,6 +486,7 @@ public class GUI {
         FeedbackTypeFrame.add(SellerNeg);
 
         FeedbackTypeFrame.setVisible(true);
+        FeedbackTypeFrame.setResizable(false);
 
         BuyerPos.addActionListener(new ActionListener() {
             @Override
@@ -444,7 +554,7 @@ public class GUI {
         FeedbackTypeFrame.add(ReliableSeller);
         FeedbackTypeFrame.add(FastShipping);
         FeedbackTypeFrame.add(ImpressivePackaging);
-
+        FeedbackTypeFrame.setResizable(false);
         FeedbackTypeFrame.setVisible(true);
 
         FinishClipboard.addActionListener(new ActionListener() {
@@ -546,7 +656,7 @@ public class GUI {
         FeedbackTypeFrame.add(button4);
         FeedbackTypeFrame.add(button5);
         FeedbackTypeFrame.add(button6);
-
+        FeedbackTypeFrame.setResizable(false);
         FeedbackTypeFrame.setVisible(true);
 
         button0.addActionListener(new ActionListener() {
@@ -620,7 +730,7 @@ public class GUI {
         FeedbackTypeFrame.add(button2);
         FeedbackTypeFrame.add(button3);
         FeedbackTypeFrame.add(button4);
-
+        FeedbackTypeFrame.setResizable(false);
         FeedbackTypeFrame.setVisible(true);
 
         button0.addActionListener(new ActionListener() {
@@ -682,7 +792,7 @@ public class GUI {
         FeedbackTypeFrame.add(button2);
         FeedbackTypeFrame.add(button3);
         FeedbackTypeFrame.add(button4);
-
+        FeedbackTypeFrame.setResizable(false);
         FeedbackTypeFrame.setVisible(true);
 
         button0.addActionListener(new ActionListener() {
@@ -733,7 +843,7 @@ public class GUI {
 
         FeedbackTypeFrame.add(SellerPos);
         FeedbackTypeFrame.add(SellerNeg);
-
+        FeedbackTypeFrame.setResizable(false);
         FeedbackTypeFrame.setVisible(true);
 
         SellerPos.addActionListener(new ActionListener() {
@@ -774,7 +884,7 @@ public class GUI {
         FeedbackTypeFrame.add(button2);
         FeedbackTypeFrame.add(button3);
         FeedbackTypeFrame.add(button4);
-
+        FeedbackTypeFrame.setResizable(false);
         FeedbackTypeFrame.setVisible(true);
 
         button0.addActionListener(new ActionListener() {
@@ -848,7 +958,7 @@ public class GUI {
         FeedbackTypeFrame.add(ReliableSeller);
         FeedbackTypeFrame.add(FastShipping);
         FeedbackTypeFrame.add(ImpressivePackaging);
-
+        FeedbackTypeFrame.setResizable(false);
         FeedbackTypeFrame.setVisible(true);
 
         FinishClipboard.addActionListener(new ActionListener() {

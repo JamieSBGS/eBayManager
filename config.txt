@@ -1,4 +1,4 @@
-src/ProductList.csv
+C:\Users\Jamie\IdeaProjects\eBayManager\src\ProductList.csv
 2023-10-06
 67.968
 67.968
